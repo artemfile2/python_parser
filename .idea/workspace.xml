@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4590f025-3e35-4c5b-8df7-3dea805c7fa2" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/msectohmc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/work_xml.py" beforeDir="false" afterPath="$PROJECT_DIR$/work_xml.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -40,14 +38,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="work_xml.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="work_xml.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/work_xml.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="29" column="24" selection-start-line="29" selection-start-column="24" selection-end-line="29" selection-end-column="24" />
+            <state relative-caret-position="286">
+              <caret line="25" column="52" lean-forward="true" selection-start-line="25" selection-start-column="52" selection-end-line="25" selection-end-column="52" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="44">
+              <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -105,10 +112,10 @@
         <option value="$PROJECT_DIR$/file_extract.py" />
         <option value="$PROJECT_DIR$/connect.py" />
         <option value="$PROJECT_DIR$/main.py" />
-        <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/xml_todb.py" />
         <option value="$PROJECT_DIR$/msectohmc.py" />
         <option value="$PROJECT_DIR$/work_xml.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -233,7 +240,7 @@
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32998565" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.2754663" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32998565" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16709511" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16709511" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="3" />
@@ -610,13 +617,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="12" selection-start-column="12" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/xml_todb.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
@@ -670,11 +670,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/work_xml.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="29" column="24" selection-start-line="29" selection-start-column="24" selection-end-line="29" selection-end-column="24" />
+        <state relative-caret-position="286">
+          <caret line="25" column="52" lean-forward="true" selection-start-line="25" selection-start-column="52" selection-end-line="25" selection-end-column="52" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
         </state>
       </provider>
     </entry>
