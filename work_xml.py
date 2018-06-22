@@ -6,6 +6,7 @@ from time import strftime, localtime, sleep
 from xml_todb import *
 from connect import *
 from PyQt5.QtWidgets import QApplication
+import msectohmc
 
 """
 Функция работы с архивом
@@ -26,19 +27,22 @@ def extractZipXml(self, year, month, dir_XmlZip, tmp):
                 time_start = timeit.default_timer()
                 #Получаю файл ZIP из папки VipNet
                 pathfile_zip = exist(dir_XmlZip, year, month, glpu)
+                sleep(1)
                 #Копирую архив во временную папку
                 copy(pathfile_zip, tmp)
-                sleep(1)
                 #Получаю новый путь из временной папки
                 tmp_zip = exist(tmp, year, month, glpu)
                 #Извлекаю из архива файлы и удаляю архив = True
                 extract(tmp_zip, tmp, True)
                 getFileXml(tmp_zip, year, month, glpu)
                 tm_wr = str(timeit.default_timer() - time_start)
+                tm_wr2 = timeit.default_timer() - time_start
+                tt = msectohmc.display_time(tm_wr2)
+
                 print(tmp_zip + ' ' + name_mo.strip() + ' время обработки: ' + tm_wr[0: 5])
 
                 self.ui.textEdit.append(tmp_zip + '\n' +
                                         '  ==> ' + name_mo.strip() + '\n' +
                                         '  ==> дата/время: ' + strftime("%d.%m.%Y %H:%M:%S", localtime()) + '\n' +
-                                        '  ==> время обработки: ' + tm_wr[0: 5] + '\n')
+                                        '  ==> время обработки: ' + tt + '\n')
                 QApplication.instance().processEvents()
