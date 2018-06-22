@@ -72,7 +72,6 @@ def insert_doc(glpu, mcod, kod, fio, idmsp, spec):
     try:
         db = con('db')
         dbcur = db.cursor()
-        #doctor
         query = dbcur.prepare('INSERT INTO DT05S50201805_COPY (glpu, mcod, kod, fio, idmsp, spec) '
                               'VALUES (:glpu, :mcod, :kod, :fio, :idmsp, :spec)')
         dbcur.execute(query, (glpu, mcod, kod, fio, idmsp, spec))
@@ -90,14 +89,11 @@ def insert_schet(code, code_mo, year, month, nschet, dschet, plat, summav, comen
     try:
         db = con('db')
         dbcur = db.cursor()
-        #schet
         query = """INSERT INTO ST05S50201805_COPY (code, glpu, yer, mont, nschet, dschet, plat, summav, coments, summap) 
                    VALUES (:code, :glpu, :yer, :mont, :nschet, :dt, :plat, :summav, :coments, :summap)"""
 
         dt = datetime.strptime(dschet, "%Y-%m-%dT%H:%M:%S").date()
         dbcur.execute(query, (code, code_mo, year, month, nschet, dt, plat, summav, coments, summap))
-        # db.commit()
-        # dbcur.close()
 
     except cx_Oracle.Error as err:
         print("Query error: {}".format(err))
@@ -112,7 +108,6 @@ def insert_pacient(glpu, id_pac, vpolis, spolis, npolis,
     try:
         db = con('db')
         dbcur = db.cursor()
-        # polis
 
         query = """INSERT INTO PT05S50201805_COPY (glpu, id_pac, vpolis, spolis, npolis, smo, smo_ogrn, smo_ok,
                    smo_nam, novor, vnov_d, polis) 
@@ -122,9 +117,6 @@ def insert_pacient(glpu, id_pac, vpolis, spolis, npolis,
         polis_pac = spolis.strip() + npolis.strip()
         dbcur.execute(query, (glpu, id_pac, vpolis, spolis, npolis, smo, smoogrn, smo_ok,
                               smo_nam, novor, vnov_d, polis_pac))
-
-        # db.commit()
-        # dbcur.close()
 
     except cx_Oracle.Error as err:
         print(f'Query error: {err}')
@@ -157,8 +149,6 @@ def insert_pacpers(glpu, id_pac, fam, im , ot , w, dr, dost, fam_p, im_p, ot_p, 
                               dost_p, w_p, mr, doctype, docser, docnum, snils,
                               adres, ident_sp, id_pac))
 
-        # db.commit()
-        # dbcur.close()
 
     except cx_Oracle.Error as err:
         print("Query error: {}".format(err))
@@ -211,9 +201,6 @@ def insert_sluch(lpu, lpu_1, idcase, usl_ok, vidpom, for_pom, disp, vid_hmp,
          naz_pk, pr_d_n, comentsl, pr_nov, novor_sl, orders, t_order, kem_prov, smo_sl,
          ids, prizn_prov))
 
-        # db.commit()
-        # dbcur.close()
-
     except cx_Oracle.Error as err:
         print("Query error: {}".format(err))
 
@@ -239,7 +226,6 @@ def insert_usl(lpu_u, lpu_1u, idcase, idserv, podr, profil_u, det, date_in,
                     :kol_usl, :tarif, :sumv_usl, :prvs, :code_md, :comentu, :dir2, :gr_zdorov,
                     :student, :spolis_u, :npolis_u, :stand, :p_per, :npl, :idsh)"""
 
-        #
         dtin = datetime.strptime(date_in, "%Y-%m-%d")
         dtout = datetime.strptime(date_out, "%Y-%m-%d")
         dbcur.execute(query, (lpu_u, lpu_1u, idcase, idserv, podr, profil_u, det, dtin, dtout,
@@ -247,8 +233,6 @@ def insert_usl(lpu_u, lpu_1u, idcase, idserv, podr, profil_u, det, date_in,
                               sumv_usl, prvs, code_md, comentu, dir2, gr_zdorov, student,
                               spolis_u, npolis_u, stand, p_per, npl, idsh))
 
-        # db.commit()
-        # dbcur.close()
 
     except cx_Oracle.Error as err:
         print(f'Query error: {err}')
@@ -264,8 +248,6 @@ def insert_oper(lpu, lpu_1, idserv, vid_vme, ksgh, idnomk, name_o):
                    values (:glpu, :mcod, :idserv, :hkod, :ksgh, :idnomk, :name_o)"""
 
         dbcur.execute(query, (lpu, lpu_1, idserv, vid_vme, ksgh, idnomk, name_o))
-        # db.commit()
-        # dbcur.close()
 
     except cx_Oracle.Error as err:
         print("Query error: {}".format(err))
