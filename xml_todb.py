@@ -21,6 +21,32 @@ def convert_none_type(obj):
         return ''
 
 
+def CheckTable():
+    #Функция проверки есть ли такие таблицы
+    try:
+        db = con('db')
+        dbcur = db.cursor()
+        queryCheck = """SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) = UPPER('TEST_TABLe')"""
+        dbcur.execute(queryCheck)
+        table_check = dbcur.fetchone()
+        if table_check is None:
+            return False
+        else:
+            return True
+    except cx_Oracle.Error as err:
+        print("Query error: {}".format(err))
+
+
+def CreateTables():
+    #Функция создания таблиц
+    try:
+        db = con('db')
+        dbcur = db.cursor()
+        queryCreate = """"""
+    except cx_Oracle.Error as err:
+        print("Query error: {}".format(err))
+
+
 def DeleteFromDB(glpu):
     try:
         db = con('db')
@@ -53,6 +79,71 @@ def DeleteFromDB(glpu):
 def XmlToDB(path, xml):
     try:
         tree = ET.parse(path + '\\' + xml)
+        if xml[0] == 'L':
+            year = '20' + xml[8:10]
+            month = xml[10:12]
+            glpu_l = xml[12:18]
+
+            db = con('db')
+            dbcur = db.cursor()
+            element_xml_root = tree.getroot()
+            try:
+                for elem_pers in element_xml_root.findall('PERS'):
+                    id_pac = convert_none_type(elem_pers.find('ID_PAC'))
+                    fam = convert_none_type(elem_pers.find('FAM'))
+                    im = convert_none_type(elem_pers.find('IM'))
+                    ot = convert_none_type(elem_pers.find('OT'))
+                    w = elem_pers.find('W').text
+                    dr = elem_pers.find('DR').text
+                    dost = convert_none_type(elem_pers.find('DOST'))
+                    fam_p = convert_none_type(elem_pers.find('FAM_P'))
+                    im_p = convert_none_type(elem_pers.find('IM_P'))
+                    ot_p = convert_none_type(elem_pers.find('OT_P'))
+                    dr_p = convert_none_type(elem_pers.find('DR_P'))
+                    dost_p = convert_none_type(elem_pers.find('DOST_P'))
+                    w_p = convert_none_type(elem_pers.find('W_P'))
+                    mr = convert_none_type(elem_pers.find('MR'))
+                    doctype = elem_pers.find('DOCTYPE').text
+                    docser = elem_pers.find('DOCSER').text
+                    docnum = elem_pers.find('DOCNUM').text
+                    snils = convert_none_type(elem_pers.find('SNILS'))
+                    okatog = elem_pers.find('OKATOG').text
+                    okatop = elem_pers.find('OKATOP').text
+                    adres = convert_none_type(elem_pers.find('ADRES'))
+                    ident_sp = convert_none_type(elem_pers.find('IDENT_SP'))
+                    comentp = elem_pers.find('COMENTP').text
+                    vpolis = elem_pers.find('VPOLIS').text
+                    novor = elem_pers.find('NOVOR').text
+                    inv = convert_none_type(elem_pers.find('inv'))
+
+                    # query = dbcur.prepare('UPDATE PT05S502018051_COPY '
+                    #                       'SET fam = :fam, im = :im, ot = :ot, w = :w, dr = :dr, dost = :dost, '
+                    #                       'fam_p = :fam_p, im_p = :im_p, ot_p = :ot_p, dr_p = :dr_p, dost_p = :dost_p, '
+                    #                       'w_p = :w_p, mr = :mr, doctype = :doctype, docser = :docser, docnum = :docnum, '
+                    #                       'snils = :snils, adres = :adres, ident_sp = :ident_sp '
+                    #                       'WHERE id_pac = :id_pac and glpu = :glpu_l')
+
+                    query = dbcur.prepare('INSERT INTO PT05S502018051_COPY '
+                                          '(id_pac, glpu, fam, im, ot, w, dr, dost, fam_p, im_p, ot_p, dr_p, dost_p, w_p,'
+                                          'mr, doctype, docser, docnum, snils, adres, ident_sp, polis) '                                      
+                                          'VALUES (:id_pac, :glpu_l, :fam, :im, :ot, :w, :dr, :dost, :fam_p, :im_p, :ot_p,'
+                                          ':dr_p, :dost_p, :w_p, :mr, :doctype, :docser, :docnum, :snils, :adres, :ident_sp, :id_pac)')
+
+
+                    dr1 = datetime.strptime(dr, "%Y-%m-%d")
+                    if dr_p == '':
+                        dr2_p = datetime.strptime('1900-01-01', "%Y-%m-%d")
+                    else:
+                        dr2_p = datetime.strptime(dr_p, "%Y-%m-%d")
+                    dbcur.execute(query, (id_pac, glpu_l, fam, im, ot, w, dr1, dost, fam_p, im_p, ot_p, dr2_p,
+                                      dost_p, w_p, mr, doctype, docser, docnum, snils, adres, ident_sp))
+
+            except cx_Oracle.Error as err:
+                print(f'Query error: {err}')
+
+            db.commit()
+            dbcur.close()
+
         if xml[0] == 'H':
             year = '20'+xml[8:10]
             month = xml[10:12]
@@ -78,14 +169,21 @@ def XmlToDB(path, xml):
                     # insert_pacient(glpu, idpac, vpolis, spolis, npolis,
                     #                stokato, smo, smoogrn, smook, smonam, novor, vnov_d)
                     try:
-                        queryPT = dbcur.prepare('INSERT INTO PT05S502018051_COPY (glpu, id_pac, vpolis, spolis, npolis, smo,'
-                                                'smo_ogrn, smo_ok, smo_nam, novor, vnov_d, polis) '
-                                                'VALUES (:glpu, :idpac, :vpolis, :spolis, :npolis, :smo, '
-                                                ':smoogrn, :smook, :smonam, :novor, :vnov_d, :polis_pac)')
+                        # queryPT = dbcur.prepare('INSERT INTO PT05S502018051_COPY (glpu, id_pac, vpolis, spolis, npolis, smo,'
+                        #                         'smo_ogrn, smo_ok, smo_nam, novor, vnov_d, polis) '
+                        #                         'VALUES (:glpu, :idpac, :vpolis, :spolis, :npolis, :smo, '
+                        #                         ':smoogrn, :smook, :smonam, :novor, :vnov_d, :polis_pac)')
 
-                        polis_pac = spolis.strip() + npolis.strip()
-                        dbcur.execute(queryPT, (glpu, idpac, vpolis, spolis, npolis, smo, smoogrn, smook,
-                                              smonam, novor, vnov_d, polis_pac))
+                        queryPT = dbcur.prepare('UPDATE PT05S502018051_COPY '
+                                              'SET vpolis = :vpolis, spolis = :spolis, npolis = :npolis, smo = :smo,'
+                                              'smo_ogrn = :smo_ogrn, smo_ok = :smo_ok, smo_nam = :smo_nam, '
+                                              'novor = :novor, vnov_d = :vnov_d '                                              
+                                              'WHERE id_pac = :idpac AND glpu = :glpu')
+
+                        # dbcur.execute(queryPT, (glpu, idpac, vpolis, spolis, npolis, smo, smoogrn, smook,
+                        #                       smonam, novor, vnov_d, polis_pac))
+                        dbcur.execute(queryPT, (vpolis, spolis, npolis, smo, smoogrn, smook,
+                                              smonam, novor, vnov_d, idpac, glpu))
 
                     except cx_Oracle.Error as err:
                         print(f'Query error: {err}')
@@ -151,6 +249,7 @@ def XmlToDB(path, xml):
                     orders = slu.find('ORDER').text
                     t_order = slu.find('T_ORDER').text
                     kem_prov = slu.find('KEM_PROV').text
+                    stat = convert_none_type(slu.find('STAT'))
                     smo_sl = slu.find('SMO').text
 
                     # insert_sluch(lpu, lpu_1, idcase, usl_ok, vidpom, for_pom, disp, vid_hmp, metod_hmp,
@@ -160,42 +259,47 @@ def XmlToDB(path, xml):
                     #              tal_p, vbr, p_otk, nrisoms, ds1_pr, ds4, nazn, naz_sp, naz_v, naz_pmp,
                     #              naz_pk, pr_d_n, comentsl, pr_nov, novor_sl, orders, t_order, kem_prov, smo_sl)
 
-                    queryTT = dbcur.prepare('INSERT INTO TT05S50201805_COPY (glpu, mcod, idcase, usl_ok, vidpom, for_pom, '
-                                'disp, vid_hmp, metod_hmp, npr_mo, extr, podr, profil, det, nhistory, date_1,'
-                                'date_2, ds0, ds1, ds2, ds3, vnov_m, code_mes1, code_mes2, rslt, rslt_d, '
-                                'ishod, prvs, vers_spec, iddokt, os_sluch, idsp, ed_col, tarif, sumv, '
-                                'oplata, sump, tal_d, tal_p, vbr, p_otk, nrisoms, ds1_pr, ds4, nazn, naz_sp, '
-                                'naz_v, naz_pmp, naz_pk, pr_d_n, comentsl, pr_nov, novor, order_, t_order, '
-                                'kem_prov, smo, id_sluch_tt, prizn_prov) '
-                                'VALUES (:lpu, :lpu_1, :idcase, :usl_ok, :vidpom, :for_pom, :disp, '
-                                ':vid_hmp, :metod_hmp, :npr_mo, :extr, :podr, :profil, :det, :nhistory, '
-                                ':dt1, :dt2, :ds0, :ds1, :ds2, :ds3, :vnov_m, :code_mes1, :code_mes2, '
-                                ':rslt, :rslt_d, :ishod, :prvs, :vers_spec, :iddokt, :os_sluch, :idsp, '
-                                ':ed_col, :tarif, :sumv, :oplata, :sump, :dtd, :dtp, :vbr, :p_otk, '
-                                ':nrisoms, :ds1_pr, :ds4, :nazn, :naz_sp, :naz_v, :naz_pmp, :naz_pk, '
-                                ':pr_d_n, :comentsl, :pr_nov, :novor_sl, :orders, :t_order,:kem_prov, '
-                                ':smo_sl, :ids, :prizn_prov)')
+                    try:
 
-                    dt1 = datetime.strptime(date_1, "%Y-%m-%d")
-                    dt2 = datetime.strptime(date_2, "%Y-%m-%d")
+                        queryTT = dbcur.prepare('INSERT INTO TT05S50201805_COPY (glpu, mcod, idcase, usl_ok, vidpom, for_pom, '
+                                    'disp, vid_hmp, metod_hmp, npr_mo, extr, podr, profil, det, nhistory, date_1,'
+                                    'date_2, ds0, ds1, ds2, ds3, vnov_m, code_mes1, code_mes2, rslt, rslt_d, '
+                                    'ishod, prvs_s, vers_spec, iddokt, os_sluch, idsp, ed_col, tarif, sumv, '
+                                    'oplata, sump, tal_d, tal_p, vbr, p_otk, nrisoms, ds1_pr, ds4, nazn, naz_sp, '
+                                    'naz_v, naz_pmp, naz_pk, pr_d_n, comentsl, pr_nov, novor, order_, t_order, '
+                                    'kem_prov, smo, id_sluch_tt, prizn_prov, id_pac, stat) '
+                                    'VALUES (:lpu, :lpu_1, :idcase, :usl_ok, :vidpom, :for_pom, :disp, '
+                                    ':vid_hmp, :metod_hmp, :npr_mo, :extr, :podr, :profil, :det, :nhistory, '
+                                    ':dt1, :dt2, :ds0, :ds1, :ds2, :ds3, :vnov_m, :code_mes1, :code_mes2, '
+                                    ':rslt, :rslt_d, :ishod, :prvs, :vers_spec, :iddokt, :os_sluch, :idsp, '
+                                    ':ed_col, :tarif, :sumv, :oplata, :sump, :dtd, :dtp, :vbr, :p_otk, '
+                                    ':nrisoms, :ds1_pr, :ds4, :nazn, :naz_sp, :naz_v, :naz_pmp, :naz_pk, '
+                                    ':pr_d_n, :comentsl, :pr_nov, :novor_sl, :orders, :t_order,:kem_prov, '
+                                    ':smo_sl, :ids, :prizn_prov, :idpac, :stat)')
 
-                    if tal_d == '':
-                        dtd = datetime.strptime('1900-01-01', "%Y-%m-%d")
-                    else:
-                        dtd = datetime.strptime(tal_d, "%Y-%m-%d")
+                        dt1 = datetime.strptime(date_1, "%Y-%m-%d")
+                        dt2 = datetime.strptime(date_2, "%Y-%m-%d")
 
-                    if tal_p == '':
-                        dtp = datetime.strptime('1900-01-01', "%Y-%m-%d")
-                    else:
-                        dtp = datetime.strptime(tal_p, "%Y-%m-%d")
+                        if tal_d == '':
+                            dtd = datetime.strptime('1900-01-01', "%Y-%m-%d")
+                        else:
+                            dtd = datetime.strptime(tal_d, "%Y-%m-%d")
 
-                    dbcur.execute(queryTT, (lpu, lpu_1, idcase, usl_ok, vidpom, for_pom, disp, vid_hmp,
-                                metod_hmp, npr_mo, extr, podr, profil, det, nhistory, dt1, dt2, ds0,
-                                ds1, ds2, ds3, vnov_m, code_mes1, code_mes2, rslt, rslt_d, ishod, prvs,
-                                vers_spec, iddokt, os_sluch, idsp, ed_col, tarif, sumv, oplata, sump,
-                                dtd, dtp, vbr, p_otk, nrisoms, ds1_pr, ds4, nazn, naz_sp, naz_v, naz_pmp,
-                                naz_pk, pr_d_n, comentsl, pr_nov, novor_sl, orders, t_order, kem_prov, smo_sl,
-                                idcase, 0))
+                        if tal_p == '':
+                            dtp = datetime.strptime('1900-01-01', "%Y-%m-%d")
+                        else:
+                            dtp = datetime.strptime(tal_p, "%Y-%m-%d")
+
+                        dbcur.execute(queryTT, (lpu, lpu_1, idcase, usl_ok, vidpom, for_pom, disp, vid_hmp,
+                                    metod_hmp, npr_mo, extr, podr, profil, det, nhistory, dt1, dt2, ds0,
+                                    ds1, ds2, ds3, vnov_m, code_mes1, code_mes2, rslt, rslt_d, ishod, prvs,
+                                    vers_spec, iddokt, os_sluch, idsp, ed_col, tarif, sumv, oplata, sump,
+                                    dtd, dtp, vbr, p_otk, nrisoms, ds1_pr, ds4, nazn, naz_sp, naz_v, naz_pmp,
+                                    naz_pk, pr_d_n, comentsl, pr_nov, novor_sl, orders, t_order, kem_prov, smo_sl,
+                                    idcase, 0, idpac, stat))
+
+                    except cx_Oracle.Error as err:
+                        print(f'Query error: {err} idcase-{idcase}')
 
                     for usl in slu.findall('USL'):
                         idserv = usl.find('IDSERV').text
@@ -226,6 +330,7 @@ def XmlToDB(path, xml):
                         student = usl.find('STUDENT').text
                         spolis_u = convert_none_type(usl.find('SPOLIS'))
                         npolis_u = convert_none_type(usl.find('NPOLIS'))
+                        stat_u = convert_none_type(usl.find('STAT'))
                         stand = usl.find('STAND').text
                         p_per = usl.find('P_PER').text
                         npl = usl.find('NPL').text
@@ -237,34 +342,59 @@ def XmlToDB(path, xml):
                         #            prvs, code_md, comentu, dir2, gr_zdorov, student,
                         #            spolis_u, npolis_u, stand, p_per, npl, idsh)
 
-                        query = dbcur.prepare('INSERT INTO UT05S50201805_COPY (lpu, lpu_1, ID_SLUCH, idserv, podr, profil,'
-                                              'det, date_in, date_out, ds, code_usl, ed_col, koefk, pouh, zak, kol_usl, '
-                                              'tarif, sumv_usl, prvs_u, code_md, comentu, dir2, gr_zdorov, student, spolis, '
-                                              'npolis, stand, p_per, npl, idsh) '
-                                              'VALUES (:lpu_u, :lpu_1u, :idcase, :idserv, :podr, :profil_u, :det, '
-                                              ':date_in, :date_out, :ds, :code_usl, :ed_col_u, :koef_k, :pouh, :zak, '
-                                              ':kol_usl, :tarif, :sumv_usl, :prvs, :code_md, :comentu, :dir2, :gr_zdorov, '
-                                              ':student, :spolis_u, :npolis_u, :stand, :p_per, :npl, :idsh)')
+                        try:
 
-                        dtin = datetime.strptime(date_in, "%Y-%m-%d")
-                        dtout = datetime.strptime(date_out, "%Y-%m-%d")
-                        dbcur.execute(query, (lpu_u, lpu_1u, idcase, idserv, podr, profil_u, det, dtin, dtout,
-                                              ds, code_usl, ed_col_u, koef_k, pouh, zak, kol_usl, tarif,
-                                              sumv_usl, prvs, code_md, comentu, dir2, gr_zdorov, student,
-                                              spolis_u, npolis_u, stand, p_per, npl, idsh))
+                            query = dbcur.prepare('INSERT INTO UT05S50201805_COPY (lpu, lpu_1, ID_SLUCH, idserv, podr, profil,'
+                                                  'det, date_in, date_out, ds, code_usl, ed_col, koefk, pouh, zak, kol_usl, '
+                                                  'tarif, sumv_usl, sumv_oms, prvs_u, code_md, comentu, dir2, gr_zdorov, '
+                                                  'student, spolis, npolis, stand, p_per, npl, idsh, id_pac, stat) '
+                                                  'VALUES (:lpu_u, :lpu_1u, :idcase, :idserv, :podr, :profil_u, :det, '
+                                                  ':date_in, :date_out, :ds, :code_usl, :ed_col_u, :koef_k, :pouh, :zak, '
+                                                  ':kol_usl, :tarif, :sumv_usl, :sumv_usl, :prvs, :code_md, :comentu, '
+                                                  ':dir2, :gr_zdorov, :student, :spolis_u, :npolis_u, :stand, :p_per, '
+                                                  ':npl, :idsh, :idpac, :stat_u)')
 
-                        for vmp_oper in usl.findall('HRRGD'):
-                            vid_vme = vmp_oper.find('VID_VME').text
-                            ksgh = vmp_oper.find('KSGH').text
-                            idnomk = vmp_oper.find('IDNOMK').text
-                            name_o = vmp_oper.find('NAME_O').text
+                            dtin = datetime.strptime(date_in, "%Y-%m-%d")
+                            dtout = datetime.strptime(date_out, "%Y-%m-%d")
+                            dbcur.execute(query, (lpu_u, lpu_1u, idcase, idserv, podr, profil_u, det, dtin, dtout,
+                                                  ds, code_usl, ed_col_u, koef_k, pouh, zak, kol_usl, tarif,
+                                                  sumv_usl, sumv_usl, prvs, code_md, comentu, dir2, gr_zdorov, student,
+                                                  spolis_u, npolis_u, stand, p_per, npl, idsh, idpac, stat_u))
 
-                            # insert_oper(lpu_u, lpu_1u, idserv, vid_vme, ksgh, idnomk, name_o)
+                        except cx_Oracle.Error as err:
+                            print(f'Query error: {err} idserv-{idserv}')
 
-                            query = dbcur.prepare('INSERT INTO NT05S50201805_COPY (glpu, mcod, idserv, hkod, ksgh, idnomk, name_o) '
-                                                  'values (:glpu, :mcod, :idserv, :hkod, :ksgh, :idnomk, :name_o)')
 
-                            dbcur.execute(query, (lpu, lpu_1, idserv, vid_vme, ksgh, idnomk, name_o))
+                            for vmp_oper in usl.findall('HRRGD'):
+                                vid_vme = vmp_oper.find('VID_VME').text
+                                ksgh = vmp_oper.find('KSGH').text
+                                idnomk = vmp_oper.find('IDNOMK').text
+                                name_o = vmp_oper.find('NAME_O').text
+
+                                # insert_oper(lpu_u, lpu_1u, idserv, vid_vme, ksgh, idnomk, name_o)
+
+                                query = dbcur.prepare('INSERT INTO NT05S50201805_COPY (glpu, mcod, idserv, hkod, ksgh, idnomk, name_o) '
+                                                      'values (:glpu, :mcod, :idserv, :hkod, :ksgh, :idnomk, :name_o)')
+
+                                dbcur.execute(query, (lpu, lpu_1, idserv, vid_vme, ksgh, idnomk, name_o))
+
+
+            for element_doc in element_xml_root.findall('VRACH'):
+                kod = element_doc.find('KOD').text
+                fio = element_doc.find('FIO').text
+                mcod = element_doc.find('LPU_1').text
+                idmsp = element_doc.find('IDMSP').text
+                spec = convert_none_type(element_doc.find('SPEC'))
+
+                # insert_doc(glpu, mcod, kod, fio, idmsp, spec)
+
+                try:
+                    queryDT = dbcur.prepare('INSERT INTO DT05S50201805_COPY (glpu, mcod, kod, fio, idmsp, spec) '
+                                            'VALUES (:glpu, :mcod, :kod, :fio, :idmsp, :spec)')
+                    dbcur.execute(queryDT, (glpu, mcod, kod, fio, idmsp, spec))
+
+                except cx_Oracle.Error as err:
+                    print(f'Query error: {err}')
 
             for element_shet in element_xml_root.findall('SCHET'):
                 code = element_shet.find('CODE').text
@@ -280,87 +410,21 @@ def XmlToDB(path, xml):
 
                 # insert_schet(code, code_mo, year_s, month_s, nschet, dschet, plat, summav, coments, summap)
 
-                queryST = dbcur.prepare('INSERT INTO ST05S50201805_COPY (code, glpu, yer, mont, nschet, dschet, plat, '
-                                        'summav, coments, summap) '
-                                        'VALUES (:code, :glpu, :year_s, :month_s, :nschet, :dt, :plat, '
-                                        ':summav, :coments, :summap)')
+                try:
+                    queryST = dbcur.prepare('INSERT INTO ST05S50201805_COPY (code, glpu, yer, mont, nschet, dschet, plat, '
+                                            'summav, coments, summap) '
+                                            'VALUES (:code, :glpu, :year_s, :month_s, :nschet, :dt, :plat, '
+                                            ':summav, :coments, :summap)')
 
-                dt = datetime.strptime(dschet, "%Y-%m-%dT%H:%M:%S").date()
-                dbcur.execute(queryST, (code, code_mo, year_s, month_s, nschet, dt, plat, summav, coments, summap))
+                    dt = datetime.strptime(dschet, "%Y-%m-%dT%H:%M:%S").date()
+                    dbcur.execute(queryST, (code, code_mo, year_s, month_s, nschet, dt, plat, summav, coments, summap))
 
-            for element_doc in element_xml_root.findall('VRACH'):
-                kod = element_doc.find('KOD').text
-                fio = element_doc.find('FIO').text
-                mcod = element_doc.find('LPU_1').text
-                idmsp = element_doc.find('IDMSP').text
-                spec = convert_none_type(element_doc.find('SPEC'))
-
-                # insert_doc(glpu, mcod, kod, fio, idmsp, spec)
-
-                queryDT = dbcur.prepare('INSERT INTO DT05S50201805_COPY (glpu, mcod, kod, fio, idmsp, spec) '
-                                        'VALUES (:glpu, :mcod, :kod, :fio, :idmsp, :spec)')
-                dbcur.execute(queryDT, (glpu, mcod, kod, fio, idmsp, spec))
+                except cx_Oracle.Error as err:
+                    print(f'Query error: {err}')
 
             db.commit()
             dbcur.close()
 
-        if xml[0] == 'L':
-            year = '20' + xml[8:10]
-            month = xml[10:12]
-            glpu_l = xml[12:18]
-
-            db = con('db')
-            dbcur = db.cursor()
-            element_xml_root = tree.getroot()
-            for elem_pers in element_xml_root.findall('PERS'):
-                id_pac = convert_none_type(elem_pers.find('ID_PAC'))
-                fam = convert_none_type(elem_pers.find('FAM'))
-                im = convert_none_type(elem_pers.find('IM'))
-                ot = convert_none_type(elem_pers.find('OT'))
-                w = elem_pers.find('W').text
-                dr = elem_pers.find('DR').text
-                dost = elem_pers.find('DOST').text
-                fam_p = convert_none_type(elem_pers.find('FAM_P'))
-                im_p = convert_none_type(elem_pers.find('IM_P'))
-                ot_p = convert_none_type(elem_pers.find('OT_P'))
-                dr_p = convert_none_type(elem_pers.find('DR_P'))
-                dost_p = convert_none_type(elem_pers.find('DOST_P'))
-                w_p = convert_none_type(elem_pers.find('W_P'))
-                mr = convert_none_type(elem_pers.find('MR'))
-                doctype = elem_pers.find('DOCTYPE').text
-                docser = elem_pers.find('DOCSER').text
-                docnum = elem_pers.find('DOCNUM').text
-                snils = convert_none_type(elem_pers.find('SNILS'))
-                okatog = elem_pers.find('OKATOG').text
-                okatop = elem_pers.find('OKATOP').text
-                adres = convert_none_type(elem_pers.find('ADRES'))
-                ident_sp = convert_none_type(elem_pers.find('IDENT_SP'))
-                comentp = elem_pers.find('COMENTP').text
-                vpolis = elem_pers.find('VPOLIS').text
-                novor = elem_pers.find('NOVOR').text
-
-                    # insert_pacpers(glpu, id_pac, fam, im, ot, w, dr, dost, fam_p, im_p, ot_p, dr_p,
-                    #            dost_p, w_p, mr, doctype, docser, docnum, snils, okatog,
-                    #            okatop, adres, ident_sp, comentp, vpolis, novor)
-
-                query = dbcur.prepare('UPDATE PT05S502018051_COPY '
-                                      'SET fam = :fam, im = :im, ot = :ot, w = :w, dr = :dr, dost = :dost, '
-                                      'fam_p = :fam_p, im_p = :im_p, ot_p = :ot_p, dr_p = :dr_p, dost_p = :dost_p, '
-                                      'w_p = :w_p, mr = :mr, doctype = :doctype, docser = :docser, docnum = :docnum, '
-                                      'snils = :snils, adres = :adres, ident_sp = :ident_sp '
-                                      'WHERE id_pac = :id_pac and glpu = :glpu_l')
-
-                dr1 = datetime.strptime(dr, "%Y-%m-%d")
-                if dr_p == '':
-                    dr2_p = datetime.strptime('1900-01-01', "%Y-%m-%d")
-                else:
-                    dr2_p = datetime.strptime(dr_p, "%Y-%m-%d")
-                dbcur.execute(query, (fam, im, ot, w, dr1, dost, fam_p, im_p, ot_p, dr2_p,
-                                  dost_p, w_p, mr, doctype, docser, docnum, snils,
-                                  adres, ident_sp, id_pac, glpu_l))
-
-            db.commit()
-            dbcur.close()
 
         os.remove(path + '\\' + xml)
 
@@ -377,9 +441,10 @@ def getFileXml(xml_file, year, month, glpu):
         pathxml = os.path.dirname(xml_file)
         typefile = os.path.basename(xml_file)[-5]
         files = os.listdir(pathxml)
-        xml = filter(lambda x: x.endswith(year[2:4] + month + glpu + typefile + '.XML'), files)
+        xml = list(filter(lambda x: x.endswith(year[2:4] + month + glpu + typefile + '.XML'), files))
         DeleteFromDB(glpu)
 
+        xml.reverse()
         for file in xml:
             XmlToDB(pathxml, file)
 
