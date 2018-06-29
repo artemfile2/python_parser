@@ -34,11 +34,11 @@ def extractZipXml(self, year, month, dir_XmlZip, tmp):
                 tmp_zip = exist(tmp, year, month, glpu)
                 #Извлекаю из архива файлы и удаляю архив = True
                 extract(tmp_zip, tmp, True)
+                CheckTable()
                 getFileXml(tmp_zip, year, month, glpu)
                 tm_wr = str(timeit.default_timer() - time_start)
                 tm_wr2 = timeit.default_timer() - time_start
                 tt = msectohmc.display_time(tm_wr2)
-
                 print(tmp_zip + ' ' + name_mo.strip() + ' время обработки: ' + tm_wr[0: 5])
 
                 self.ui.textEdit.append(tmp_zip + '\n' +

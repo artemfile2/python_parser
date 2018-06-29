@@ -14,7 +14,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.ui.lineEdit.setPlaceholderText("Пример: 2018")
         self.ui.lineEdit_2.setPlaceholderText("Пример: 07")
 
-        self.setWindowTitle('Icon')
+        self.setWindowTitle('ParserXMLORCL')
         self.setWindowIcon(QIcon('00011.ico'))
 
         # Этой строчкой мы вешаем на кнопку нашу новую функцию
