@@ -1,14 +1,14 @@
 from connect import *
 import os
 import xml.etree.ElementTree as ET
+from PyQt5 import QtWidgets
 
-
-"""
-    функция проверки поля в XML
-    если поля нет или NUll то 
-    чтобы ошибки не было возвращаю пустую строку 
-"""
 def convert_none_type(obj):
+    """
+        функция проверки поля в XML
+        если поля нет или NUll то
+        чтобы ошибки не было возвращаю пустую строку
+    """
     try:
         if obj is None:
             return ''
@@ -19,32 +19,6 @@ def convert_none_type(obj):
                 return obj.text
     except TypeError:
         return ''
-
-
-def CheckTable():
-    #Функция проверки есть ли такие таблицы
-    try:
-        db = con('db')
-        dbcur = db.cursor()
-        queryCheck = """SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) = UPPER('TEST_TABLe')"""
-        dbcur.execute(queryCheck)
-        table_check = dbcur.fetchone()
-        if table_check is None:
-            return False
-        else:
-            return True
-    except cx_Oracle.Error as err:
-        print("Query error: {}".format(err))
-
-
-def CreateTables():
-    #Функция создания таблиц
-    try:
-        db = con('db')
-        dbcur = db.cursor()
-        queryCreate = """"""
-    except cx_Oracle.Error as err:
-        print("Query error: {}".format(err))
 
 
 def DeleteFromDB(glpu):
@@ -69,14 +43,21 @@ def DeleteFromDB(glpu):
         db.commit()
         dbcur.close()
 
-    except IOError as err:
+    except cx_Oracle.Error as err:
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Critical)
+        msg.setText("Query error: {}".format(err))
+        msg.setWindowTitle("Ошибка в запросе")
+        msg.setDetailedText("Query error: {}".format(err))
+        msg.exec_()
         print(err)
 
 
-"""
-Парсинг XML файла и запись строк в базу
-"""
+
 def XmlToDB(path, xml):
+    """
+        Парсинг XML файла и запись строк в базу
+    """
     try:
         tree = ET.parse(path + '\\' + xml)
         if xml[0] == 'L':
@@ -442,6 +423,7 @@ def getFileXml(xml_file, year, month, glpu):
         typefile = os.path.basename(xml_file)[-5]
         files = os.listdir(pathxml)
         xml = list(filter(lambda x: x.endswith(year[2:4] + month + glpu + typefile + '.XML'), files))
+
         DeleteFromDB(glpu)
 
         xml.reverse()
