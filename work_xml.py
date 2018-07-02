@@ -10,61 +10,15 @@ from PyQt5 import QtWidgets
 import msectohmc
 
 
-def CreateTables(self, name_table):
+def CreateTables(self, period):
     """
         Функция создания таблиц
     """
     try:
         db = con('db')
         dbcur = db.cursor()
-        queryCreate = """CREATE TABLE ST05S50201807 (
-                          ID_SCH VARCHAR2(25 BYTE),
-                          VPOLIS NUMBER(*, 0),
-                          SPOLIS VARCHAR2(10 BYTE),
-                          NPOLIS VARCHAR2(20 BYTE),
-                          SMO VARCHAR2(5 BYTE),
-                          SMO_OGRN VARCHAR2(15 BYTE),
-                          SMO_OK VARCHAR2(5 BYTE),
-                          SMO_NAM VARCHAR2(50 BYTE),
-                          NOVOR VARCHAR2(8 BYTE),
-                          FAM VARCHAR2(40 BYTE),
-                          IM VARCHAR2(40 BYTE),
-                          OT VARCHAR2(40 BYTE),
-                          W NUMBER(*, 0),
-                          DR DATE,
-                          FAM_P VARCHAR2(40 BYTE),
-                          IM_P VARCHAR2(40 BYTE),
-                          OT_P VARCHAR2(40 BYTE),
-                          W_P NUMBER(*, 0),
-                          DR_P DATE,
-                          MR VARCHAR2(60 BYTE),
-                          DOCTYPE NUMBER(*, 0),
-                          DOCSER VARCHAR2(10 BYTE),
-                          DOCNUM VARCHAR2(20 BYTE),
-                          SNILS VARCHAR2(15 BYTE),
-                          ADRES VARCHAR2(80 BYTE),
-                          STAT NUMBER(*, 0),
-                          POLIS VARCHAR2(30 BYTE) NOT NULL,
-                          ID_PAC VARCHAR2(36 BYTE),
-                          VNOV_D VARCHAR2(10 BYTE),
-                          GLPU VARCHAR2(6 BYTE),
-                          DOST VARCHAR2(10 BYTE),
-                          DOST_P VARCHAR2(10 BYTE),
-                          IDENT_SP VARCHAR2(10 BYTE),
-                          INV NUMBER(*, 0)
-                          )
-                          TABLESPACE SYSTEM
-                          STORAGE (INITIAL 64 K
-                                 MAXEXTENTS UNLIMITED)
-                          LOGGING                          
-                          """
+        queryCreate = f"CALL SYSTEM.CREATE_TABLE('{period}')"
         dbcur.execute(queryCreate)
-        queryIndex = """CREATE UNIQUE INDEX UK_ST05S50201807 ON ST05S50201807 (ID_PAC, GLPU)
-                        TABLESPACE SYSTEM
-                        STORAGE (INITIAL 64 K
-                                 MAXEXTENTS UNLIMITED)
-                        LOGGING"""
-        dbcur.execute(queryIndex)
         db.commit()
         dbcur.close()
 
@@ -107,14 +61,15 @@ def CheckTable(name_table):
 """
 def extractZipXml(self, year, month, dir_XmlZip, tmp):
 
-    if CheckTable('ST05S50' + year + month):
+    tabl_name = 'ST05S50' + year + month
+    if CheckTable(tabl_name):
         self.ui.textEdit.append('Таблицы за отчетный период ' + year + ' ' + month +
                                 ' найдены, данные с XML загружаются...')
         QApplication.instance().processEvents()
     else:
         self.ui.textEdit.append('Идет создание таблиц для отчетного месяца ' + year + ' ' + month)
         QApplication.instance().processEvents()
-        CreateTables(self, 'ST05S50' + year + month)
+        CreateTables(self, year + month)
 
 
     i_infinity = 0

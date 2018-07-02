@@ -1,0 +1,23 @@
+CREATE OR REPLACE PROCEDURE SYSTEM.create_st (period VARCHAR2)
+AS
+--IS
+--  pragma autonomous_transaction;
+BEGIN
+ execute immediate
+    'CREATE TABLE ST05S50'||period||' (
+      CODE      VARCHAR2(10 BYTE),
+      GLPU      VARCHAR2(6 BYTE),
+      YER       VARCHAR2(6 BYTE),
+      MONT      VARCHAR2(2 BYTE),
+      NSCHET    VARCHAR2(15 BYTE),
+      DSCHET    DATE,
+      PLAT      VARCHAR2(10 BYTE),
+      SUMMAV    FLOAT(49),
+      COMENTS   VARCHAR2(250 BYTE),
+      SANK_MEK  FLOAT(49),
+      SANK_MEE  FLOAT(49),
+      SUMMAP    FLOAT(49),
+      SANK_EKMP FLOAT(49)
+    )';
+
+END;
