@@ -1,0 +1,10 @@
+CREATE OR REPLACE PROCEDURE SYSTEM.CREATE_TABLE (period VARCHAR2)
+AS
+BEGIN
+  CREATE_ST(period);
+  CREATE_PT(period);
+  CREATE_DT(period);
+  CREATE_NT(period);
+  CREATE_TT(period);
+  CREATE_UT(period);
+END;

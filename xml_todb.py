@@ -1,7 +1,7 @@
-from connect import *
 import os
 import xml.etree.ElementTree as ET
 from PyQt5 import QtWidgets
+from connect import *
 
 def convert_none_type(obj):
     """
@@ -96,6 +96,7 @@ def XmlToDB(path, xml):
                     vpolis = elem_pers.find('VPOLIS').text
                     novor = elem_pers.find('NOVOR').text
                     inv = convert_none_type(elem_pers.find('inv'))
+                    mse = convert_none_type(elem_pers.find('mse'))
 
                     # query = dbcur.prepare('UPDATE PT05S502018051_COPY '
                     #                       'SET fam = :fam, im = :im, ot = :ot, w = :w, dr = :dr, dost = :dost, '
@@ -106,9 +107,10 @@ def XmlToDB(path, xml):
 
                     query = dbcur.prepare('INSERT INTO PT05S502018051_COPY '
                                           '(id_pac, glpu, fam, im, ot, w, dr, dost, fam_p, im_p, ot_p, dr_p, dost_p, w_p,'
-                                          'mr, doctype, docser, docnum, snils, adres, ident_sp, polis) '                                      
+                                          'mr, doctype, docser, docnum, snils, adres, ident_sp, polis, inv, mse) '                                      
                                           'VALUES (:id_pac, :glpu_l, :fam, :im, :ot, :w, :dr, :dost, :fam_p, :im_p, :ot_p,'
-                                          ':dr_p, :dost_p, :w_p, :mr, :doctype, :docser, :docnum, :snils, :adres, :ident_sp, :id_pac)')
+                                          ':dr_p, :dost_p, :w_p, :mr, :doctype, :docser, :docnum, :snils, :adres, :ident_sp,'
+                                          ':id_pac, :inv, :mse)')
 
 
                     dr1 = datetime.strptime(dr, "%Y-%m-%d")
@@ -117,7 +119,7 @@ def XmlToDB(path, xml):
                     else:
                         dr2_p = datetime.strptime(dr_p, "%Y-%m-%d")
                     dbcur.execute(query, (id_pac, glpu_l, fam, im, ot, w, dr1, dost, fam_p, im_p, ot_p, dr2_p,
-                                      dost_p, w_p, mr, doctype, docser, docnum, snils, adres, ident_sp))
+                                      dost_p, w_p, mr, doctype, docser, docnum, snils, adres, ident_sp, id_pac, inv, mse))
 
             except cx_Oracle.Error as err:
                 print(f'Query error: {err}')
@@ -135,18 +137,17 @@ def XmlToDB(path, xml):
             element_xml_root = tree.getroot()
             for element in element_xml_root.findall('ZAP'):
                 for pac in element.findall('PACIENT'):
-                    idpac = pac.find('ID_PAC').text
-                    vpolis = pac.find('VPOLIS').text
+                    idpac = convert_none_type(pac.find('ID_PAC'))
+                    vpolis = convert_none_type(pac.find('VPOLIS'))
                     spolis = convert_none_type(pac.find('SPOLIS'))
-                    npolis = pac.find('NPOLIS').text
+                    npolis = convert_none_type(pac.find('NPOLIS'))
                     stokato = pac.find('ST_OKATO').text
                     smo = convert_none_type(pac.find('SMO'))
                     smoogrn = convert_none_type(pac.find('SMO_OGRN'))
                     smook = convert_none_type(pac.find('SMO_OK'))
                     smonam = convert_none_type(pac.find('SMO_NAM'))
-                    novor = pac.find('NOVOR').text
+                    novor = convert_none_type(pac.find('NOVOR'))
                     vnov_d = convert_none_type(pac.find('VNOV_D'))
-
                     # insert_pacient(glpu, idpac, vpolis, spolis, npolis,
                     #                stokato, smo, smoogrn, smook, smonam, novor, vnov_d)
                     try:
@@ -232,6 +233,8 @@ def XmlToDB(path, xml):
                     kem_prov = slu.find('KEM_PROV').text
                     stat = convert_none_type(slu.find('STAT'))
                     smo_sl = slu.find('SMO').text
+                    nprdate = convert_none_type(slu.find('NPR_DATE'))
+                    talnum = convert_none_type(slu.find('TAL_NUM'))
 
                     # insert_sluch(lpu, lpu_1, idcase, usl_ok, vidpom, for_pom, disp, vid_hmp, metod_hmp,
                     #              npr_mo, extr, podr, profil, det, nhistory, date_1, date_2, ds0, ds1,
@@ -248,18 +251,23 @@ def XmlToDB(path, xml):
                                     'ishod, prvs_s, vers_spec, iddokt, os_sluch, idsp, ed_col, tarif, sumv, '
                                     'oplata, sump, tal_d, tal_p, vbr, p_otk, nrisoms, ds1_pr, ds4, nazn, naz_sp, '
                                     'naz_v, naz_pmp, naz_pk, pr_d_n, comentsl, pr_nov, novor, order_, t_order, '
-                                    'kem_prov, smo, id_sluch_tt, prizn_prov, id_pac, stat) '
+                                    'kem_prov, smo, id_sluch_tt, prizn_prov, id_pac, stat, npr_date, tal_num) '
                                     'VALUES (:lpu, :lpu_1, :idcase, :usl_ok, :vidpom, :for_pom, :disp, '
                                     ':vid_hmp, :metod_hmp, :npr_mo, :extr, :podr, :profil, :det, :nhistory, '
                                     ':dt1, :dt2, :ds0, :ds1, :ds2, :ds3, :vnov_m, :code_mes1, :code_mes2, '
                                     ':rslt, :rslt_d, :ishod, :prvs, :vers_spec, :iddokt, :os_sluch, :idsp, '
                                     ':ed_col, :tarif, :sumv, :oplata, :sump, :dtd, :dtp, :vbr, :p_otk, '
                                     ':nrisoms, :ds1_pr, :ds4, :nazn, :naz_sp, :naz_v, :naz_pmp, :naz_pk, '
-                                    ':pr_d_n, :comentsl, :pr_nov, :novor_sl, :orders, :t_order,:kem_prov, '
-                                    ':smo_sl, :ids, :prizn_prov, :idpac, :stat)')
+                                    ':pr_d_n, :comentsl, :pr_nov, :novor_sl, :orders, :t_order, :kem_prov, '
+                                    ':smo_sl, :ids, :prizn_prov, :idpac, :stat, :nprdat, :talnum)')
 
                         dt1 = datetime.strptime(date_1, "%Y-%m-%d")
                         dt2 = datetime.strptime(date_2, "%Y-%m-%d")
+
+                        if nprdate == '':
+                            nprdat = datetime.strptime('1900-01-01', "%Y-%m-%d")
+                        else:
+                            nprdat = datetime.strptime(nprdate, "%Y-%m-%dT%H:%M:%S").date()
 
                         if tal_d == '':
                             dtd = datetime.strptime('1900-01-01', "%Y-%m-%d")
@@ -277,10 +285,10 @@ def XmlToDB(path, xml):
                                     vers_spec, iddokt, os_sluch, idsp, ed_col, tarif, sumv, oplata, sump,
                                     dtd, dtp, vbr, p_otk, nrisoms, ds1_pr, ds4, nazn, naz_sp, naz_v, naz_pmp,
                                     naz_pk, pr_d_n, comentsl, pr_nov, novor_sl, orders, t_order, kem_prov, smo_sl,
-                                    idcase, 0, idpac, stat))
+                                    idcase, 0, idpac, stat, nprdat, talnum))
 
                     except cx_Oracle.Error as err:
-                        print(f'Query error: {err} idcase-{idcase}')
+                        print(f'Query error: {err} lpu-{lpu} idcase-{idcase}')
 
                     for usl in slu.findall('USL'):
                         idserv = usl.find('IDSERV').text
@@ -343,7 +351,7 @@ def XmlToDB(path, xml):
                                                   spolis_u, npolis_u, stand, p_per, npl, idsh, idpac, stat_u))
 
                         except cx_Oracle.Error as err:
-                            print(f'Query error: {err} idserv-{idserv}')
+                            print(f'Query error: {err} lpu-{lpu_u} idserv-{idserv}')
 
 
                             for vmp_oper in usl.findall('HRRGD'):
@@ -358,7 +366,6 @@ def XmlToDB(path, xml):
                                                       'values (:glpu, :mcod, :idserv, :hkod, :ksgh, :idnomk, :name_o)')
 
                                 dbcur.execute(query, (lpu, lpu_1, idserv, vid_vme, ksgh, idnomk, name_o))
-
 
             for element_doc in element_xml_root.findall('VRACH'):
                 kod = element_doc.find('KOD').text
