@@ -1,38 +1,38 @@
+import timeit
+from time import strftime, localtime, sleep
+
+from PyQt5.QtWidgets import QApplication
+
 from file_exist import *
 from file_extract import *
 from file_copy import *
-import timeit
-from time import strftime, localtime, sleep
 from xml_todb import *
 from connect import *
-from PyQt5.QtWidgets import QApplication
-from PyQt5 import QtWidgets
 import msectohmc
 
 
-def CreateTables(self, period):
+def create_tables(period):
     """
         Функция создания таблиц
     """
     try:
         db = con('db')
         dbcur = db.cursor()
-        queryCreate = f"CALL SYSTEM.CREATE_TABLE('{period}')"
-        dbcur.execute(queryCreate)
+        dbcur.execute(f"CALL SYSTEM.CREATE_TABLE('{period}')")
         db.commit()
         dbcur.close()
 
     except cx_Oracle.Error as err:
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Critical)
-        msg.setText("Query error: {}".format(err))
+        msg.setText(f"Query error: {err}")
         msg.setWindowTitle("Ошибка в запросе")
-        msg.setDetailedText("Query error: {}".format(err))
+        msg.setDetailedText(f"Query error: {err}")
         msg.exec_()
-        print("Query error: {}".format(err))
+        print(f"Query error: {err}")
 
 
-def CheckTable(name_table):
+def check_table(name_table):
     """
         Функция проверки есть ли такие таблицы
     """
@@ -56,21 +56,19 @@ def CheckTable(name_table):
         print("Query error: {}".format(err))
 
 
-"""
-Функция работы с архивом
-"""
 def extractZipXml(self, year, month, dir_XmlZip, tmp):
+    """
+    Функция работы с архивом
+    """
 
-    tabl_name = 'ST05S50' + year + month
-    if CheckTable(tabl_name):
+    if check_table('ST05S50' + year + month):
         self.ui.textEdit.append('Таблицы за отчетный период ' + year + ' ' + month +
                                 ' найдены, данные с XML загружаются...')
         QApplication.instance().processEvents()
     else:
         self.ui.textEdit.append('Идет создание таблиц для отчетного месяца ' + year + ' ' + month)
         QApplication.instance().processEvents()
-        CreateTables(self, year + month)
-
+        create_tables(year + month)
 
     i_infinity = 0
     while i_infinity < 10:
@@ -79,20 +77,20 @@ def extractZipXml(self, year, month, dir_XmlZip, tmp):
 
         for lpu in slpu:
             glpu = lpu[0]
-            name_mo = lpu[3] #get_slpuonglpu(glpu)
+            name_mo = lpu[3]
 
             if exist(dir_XmlZip, year, month, glpu):
                 time_start = timeit.default_timer()
-                #Получаю файл ZIP из папки VipNet
+                # Получаю файл ZIP из папки VipNet
                 pathfile_zip = exist(dir_XmlZip, year, month, glpu)
                 sleep(1)
-                #Копирую архив во временную папку
+                # Копирую архив во временную папку
                 copy(pathfile_zip, tmp)
-                #Получаю новый путь из временной папки
+                # Получаю новый путь из временной папки
                 tmp_zip = exist(tmp, year, month, glpu)
-                #Извлекаю из архива файлы и удаляю архив = True
+                # Извлекаю из архива файлы и удаляю архив = True
                 extract(tmp_zip, tmp, True)
-                getFileXml(tmp_zip, year, month, glpu)
+                get_file_xml(tmp_zip, year, month, glpu)
                 tm_wr = str(timeit.default_timer() - time_start)
                 tm_wr2 = timeit.default_timer() - time_start
                 tt = msectohmc.display_time(tm_wr2)

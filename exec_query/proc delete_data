@@ -1,0 +1,17 @@
+CREATE OR REPLACE PROCEDURE SYSTEM.DELETE_DATA (period VARCHAR2, glpu VARCHAR2)
+AS
+BEGIN
+  EXECUTE IMMEDIATE
+    'DELETE FROM PT05S50'||period||' WHERE glpu = '||glpu||'';
+  EXECUTE IMMEDIATE
+    'DELETE FROM TT05S50'||period||' WHERE glpu = '||glpu||'';
+  EXECUTE IMMEDIATE
+    'DELETE FROM DT05S50'||period||' WHERE glpu = '||glpu||'';
+  EXECUTE IMMEDIATE
+    'DELETE FROM ST05S50'||period||' WHERE glpu = '||glpu||'';
+  EXECUTE IMMEDIATE
+    'DELETE FROM UT05S50'||period||' WHERE lpu = '||glpu||'';
+  EXECUTE IMMEDIATE
+    'DELETE FROM NT05S50'||period||' WHERE glpu = '||glpu||'';
+END;
+/
