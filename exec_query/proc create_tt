@@ -74,7 +74,7 @@ BEGIN
         TAL_P       DATE,
         STAT        NUMBER,
         NPR_DATE    DATE,
-        TAL_NUM     NUMBER(*, 0),
+        TAL_NUM     VARCHAR2(18 BYTE),
         CONSTRAINT PK_TT05S50'||period||' PRIMARY KEY (ID_SLUCH_TT) USING INDEX TABLESPACE SYSTEM STORAGE (INITIAL 64 K
                                                                                                        MAXEXTENTS UNLIMITED)
       )

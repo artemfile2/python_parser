@@ -2,14 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4590f025-3e35-4c5b-8df7-3dea805c7fa2" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/exec_query/function create_dt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec_query/function create_nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec_query/function create_pt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec_query/function create_st" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec_query/function create_table" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec_query/function create_tt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec_query/function create_ut" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exec_query/proc create_dt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exec_query/proc create_nt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exec_query/proc create_pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exec_query/proc create_st" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exec_query/proc create_table" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exec_query/proc create_tt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exec_query/proc create_ut" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/exec_query/proc delete_data" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/exec_query/function create_dt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/exec_query/function create_nt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/exec_query/function create_pt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/exec_query/function create_st" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/exec_query/function create_table" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/exec_query/function create_tt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/exec_query/function create_ut" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/work_xml.py" beforeDir="false" afterPath="$PROJECT_DIR$/work_xml.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/xml_todb.py" beforeDir="false" afterPath="$PROJECT_DIR$/xml_todb.py" afterDir="false" />
     </list>
@@ -21,7 +29,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/parser$main.coverage" NAME="main Coverage Results" MODIFIED="1530537850030" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/parser$main.coverage" NAME="main Coverage Results" MODIFIED="1530797531185" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/parser$xml_todb.coverage" NAME="xml_todb Coverage Results" MODIFIED="1528798053357" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="DatabaseView">
@@ -52,11 +60,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="xml_todb.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="xml_todb.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/xml_todb.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1342">
-              <caret line="64" column="30" selection-start-line="64" selection-start-column="30" selection-end-line="64" selection-end-column="30" />
+            <state relative-caret-position="242">
+              <caret line="200" column="61" lean-forward="true" selection-start-line="200" selection-start-column="61" selection-end-line="200" selection-end-column="61" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -67,20 +75,11 @@
       <file leaf-file-name="work_xml.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/work_xml.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
+            <state relative-caret-position="814">
+              <caret line="47" column="23" lean-forward="true" selection-start-line="47" selection-start-column="23" selection-end-line="47" selection-end-column="23" />
               <folding>
-                <element signature="e#0#24#0" expanded="true" />
+                <element signature="e#0#13#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="function create_dt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/exec_query/function create_dt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="9" column="4" lean-forward="true" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -132,14 +131,24 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/connect.py" />
         <option value="$PROJECT_DIR$/main.py" />
-        <option value="$PROJECT_DIR$/xml_todb.py" />
-        <option value="$PROJECT_DIR$/work_xml.py" />
         <option value="$PROJECT_DIR$/exec_query/function create_table" />
         <option value="$PROJECT_DIR$/exec_query/function create_ut" />
         <option value="$PROJECT_DIR$/exec_query/function create_tt" />
         <option value="$PROJECT_DIR$/exec_query/function create_st" />
         <option value="$PROJECT_DIR$/exec_query/function create_pt" />
         <option value="$PROJECT_DIR$/exec_query/function create_nt" />
+        <option value="$PROJECT_DIR$/exec_query/function create_dt" />
+        <option value="$PROJECT_DIR$/exec_query/delete_data" />
+        <option value="$PROJECT_DIR$/exec_query/proc delete_data" />
+        <option value="$PROJECT_DIR$/exec_query/proc create_ut" />
+        <option value="$PROJECT_DIR$/exec_query/proc create_table" />
+        <option value="$PROJECT_DIR$/exec_query/proc create_st" />
+        <option value="$PROJECT_DIR$/exec_query/proc create_pt" />
+        <option value="$PROJECT_DIR$/exec_query/proc create_nt" />
+        <option value="$PROJECT_DIR$/exec_query/proc create_dt" />
+        <option value="$PROJECT_DIR$/work_xml.py" />
+        <option value="$PROJECT_DIR$/xml_todb.py" />
+        <option value="$PROJECT_DIR$/exec_query/proc create_tt" />
       </list>
     </option>
   </component>
@@ -158,7 +167,9 @@
     <option name="width" value="1346" />
     <option name="height" value="688" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -190,13 +201,13 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\python\parser" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\python\parser\exec_query" />
       <recent name="D:\python\parser" />
       <recent name="D:\python\parser\venv" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\python\parser" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -268,9 +279,9 @@
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32998565" />
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32998565" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.2754663" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.2754663" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32998565" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18251929" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20308483" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="3" />
@@ -359,55 +370,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/file_copy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="8" column="18" lean-forward="true" selection-start-line="7" selection-start-column="4" selection-end-line="8" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/connect.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
-          <folding>
-            <element signature="e#0#16#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/file_extract.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="8" column="47" lean-forward="true" selection-start-line="8" selection-start-column="47" selection-end-line="8" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="22" column="47" lean-forward="true" selection-start-line="22" selection-start-column="47" selection-end-line="22" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/xml_todb.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="814">
-          <caret line="37" column="55" lean-forward="true" selection-start-line="37" selection-start-column="55" selection-end-line="37" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/connect2.py" />
-    <entry file="file://$PROJECT_DIR$/connect.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="616">
-          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
-          <folding>
-            <element signature="e#0#16#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="506">
@@ -493,7 +455,7 @@
         <state relative-caret-position="88">
           <caret line="4" column="22" lean-forward="true" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
           <folding>
-            <element signature="e#0#24#0" expanded="true" />
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -638,79 +600,86 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/xml_todb.py">
+    <entry file="file://$USER_HOME$/Desktop/SQL1.sql" />
+    <entry file="file://$PROJECT_DIR$/exec_query/proc delete_data">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1342">
-          <caret line="64" column="30" selection-start-line="64" selection-start-column="30" selection-end-line="64" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="352">
+          <caret line="16" column="1" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Desktop/SQL1.sql">
+    <entry file="file://$PROJECT_DIR$/exec_query/proc create_ut">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="42" lean-forward="true" selection-start-column="42" selection-end-column="42" />
+        <state relative-caret-position="1188">
+          <caret line="54" column="4" selection-start-line="54" selection-start-column="4" selection-end-line="54" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/function create_table">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="20" lean-forward="true" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/function create_ut">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="1" column="2" lean-forward="true" selection-start-line="1" selection-start-column="2" selection-end-line="1" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/function create_tt">
+    <entry file="file://$PROJECT_DIR$/exec_query/function create_tt" />
+    <entry file="file://$PROJECT_DIR$/exec_query/function create_table" />
+    <entry file="file://$PROJECT_DIR$/exec_query/proc create_table">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
-          <caret line="9" column="33" lean-forward="true" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
+          <caret line="9" column="4" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/function create_st">
+    <entry file="file://$PROJECT_DIR$/exec_query/function create_st" />
+    <entry file="file://$PROJECT_DIR$/exec_query/proc create_st">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" column="39" lean-forward="true" selection-start-line="6" selection-start-column="39" selection-end-line="6" selection-end-column="39" />
+        <state relative-caret-position="484">
+          <caret line="22" column="4" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/function create_pt">
+    <entry file="file://$PROJECT_DIR$/exec_query/function create_pt" />
+    <entry file="file://$PROJECT_DIR$/exec_query/proc create_pt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="34" lean-forward="true" selection-start-line="3" selection-start-column="34" selection-end-line="3" selection-end-column="34" />
+        <state relative-caret-position="601">
+          <caret line="47" column="4" selection-start-line="47" selection-start-column="4" selection-end-line="47" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/function create_nt">
+    <entry file="file://$PROJECT_DIR$/exec_query/function create_nt" />
+    <entry file="file://$PROJECT_DIR$/exec_query/proc create_nt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
           <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/exec_query/function create_dt" />
+    <entry file="file://$PROJECT_DIR$/exec_query/proc create_dt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="13" column="4" selection-start-line="13" selection-start-column="4" selection-end-line="13" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/exec_query/proc create_tt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="491">
+          <caret line="76" column="31" selection-start-line="76" selection-start-column="31" selection-end-line="76" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/work_xml.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
+        <state relative-caret-position="814">
+          <caret line="47" column="23" lean-forward="true" selection-start-line="47" selection-start-column="23" selection-end-line="47" selection-end-column="23" />
           <folding>
-            <element signature="e#0#24#0" expanded="true" />
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/function create_dt">
+    <entry file="file://$PROJECT_DIR$/xml_todb.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="9" column="4" lean-forward="true" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
+        <state relative-caret-position="242">
+          <caret line="200" column="61" lean-forward="true" selection-start-line="200" selection-start-column="61" selection-end-line="200" selection-end-column="61" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
