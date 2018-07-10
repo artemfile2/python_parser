@@ -1,0 +1,14 @@
+CREATE OR REPLACE PROCEDURE SYSTEM.RUN_EXP_PROC (period VARCHAR2, s_glpu VARCHAR2)
+AS
+BEGIN
+
+  EXP_ADRES('PT05S50'||period, s_glpu);
+
+  EXP_DATEUSL('UT05S50'||period, s_glpu);
+
+  EXP_DOCTOR('UT05S50'||period, s_glpu);
+
+  EXP_USL_AGE('UT05S50'||period, s_glpu);
+
+END;
+/

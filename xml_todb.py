@@ -64,6 +64,7 @@ def xml_2_db(path, xml):
         db = con('db')
         dbcur = db.cursor()
         tree = ET.parse(path + '\\' + xml)
+        glpu_g = xml[12:18]
         if xml[0] == 'L':
             year = '20' + xml[8:10]
             month = xml[10:12]
@@ -386,13 +387,18 @@ def xml_2_db(path, xml):
                 dt = os.path.getmtime(path + '\\' + xml)
                 dt = datetime.fromtimestamp(dt)
                 dbcur.execute(queryF, (dt, glpu, xml[18:19], year, month))
+                # print(glpu + ' = '+ xml[18:19] + ' = '+ year + ' = '+ month)
             except cx_Oracle.Error as err:
                 print(f'Query error: {err}')
 
         db.commit()
-        dbcur.close()
 
         os.remove(path + '\\' + xml)
+
+        if xml[0] == 'H':
+            dbcur.execute("CALL SYSTEM.RUN_EXP_PROC('{}', '{}')".format(year+month, glpu_g))
+
+        dbcur.close()
 
     except IOError as err:
         print(err)
