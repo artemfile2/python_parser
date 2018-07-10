@@ -1,0 +1,36 @@
+CREATE OR REPLACE PROCEDURE SYSTEM.EXP_DATEUSL (period VARCHAR2, s_glpu VARCHAR2)
+  IS
+  PRAGMA autonomous_transaction;
+
+  idpacs ut.id_pac%type;
+  idsluch ut.id_sluch%type;
+  idserv ut.idserv%type;
+  mcod ut.lpu_1%type;
+
+  query2 VARCHAR2(500);
+  TYPE EmpCurTyp IS REF CURSOR;
+  cur2 EmpCurTyp;
+
+BEGIN
+  query2 := 'SELECT ut.id_pac, ut.id_sluch, ut.idserv, ut.lpu_1
+                 FROM '||period||' ut
+                 WHERE ut.DATE_OUT < ut.DATE_IN AND ut.lpu = '||''''||s_glpu||''' AND
+                     ut.id_pac||ut.LPU NOT IN (SELECT s.ID_PAC||s.GLPU
+                                                   FROM SANKC s
+                                                   WHERE s.glpu = '||''''||s_glpu||''' AND
+                                                         s.period = '||''''||SUBSTR(period, -6, 6)||''')';
+
+ OPEN cur2 for query2;
+  LOOP
+    FETCH cur2 INTO idpacs, idsluch, idserv, mcod;
+      EXIT WHEN cur2%NOTFOUND;
+
+      INSERT INTO SANKC (glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period)
+          VALUES (s_glpu, mcod, '5.1.4.', 19, idpacs, idsluch, idserv, SYSDATE, SUBSTR(period, -6, 6));
+
+  END LOOP;
+  CLOSE cur2;
+  COMMIT;
+
+END;
+/
