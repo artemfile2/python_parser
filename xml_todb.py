@@ -40,6 +40,8 @@ def delete_from_db(period, glpu):
         dbcur.execute(queryUTs)
         queryNTs = """DELETE FROM NT05S50{} WHERE glpu = {!r}""".format(period, glpu)
         dbcur.execute(queryNTs)
+        querySNK = """DELETE FROM SANKC WHERE period = {!r} and glpu = {!r}""".format(period, glpu)
+        dbcur.execute(querySNK)
         # qu = dbcur.prepare('CALL SYSTEM.DELETE_DATA(:period, :glpu)')
         # dbcur.execute(qu, (period, glpu))
 
