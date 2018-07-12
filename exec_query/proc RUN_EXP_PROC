@@ -10,5 +10,9 @@ BEGIN
 
   EXP_USL_AGE('UT05S50'||period, s_glpu);
 
+  EXP_DIAG_ERR('UT05S50'||period, s_glpu);
+
+  EXP_DB_ERR('PT05S50'||period, s_glpu);
+
 END;
 /
