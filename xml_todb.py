@@ -2,6 +2,7 @@ import os
 import datetime
 import xml.etree.ElementTree as ET
 from PyQt5 import QtWidgets
+from time import sleep
 
 from connect import *
 
@@ -44,7 +45,6 @@ def delete_from_db(period, glpu):
         dbcur.execute(querySNK)
         # qu = dbcur.prepare('CALL SYSTEM.DELETE_DATA(:period, :glpu)')
         # dbcur.execute(qu, (period, glpu))
-
         db.commit()
         dbcur.close()
 
@@ -120,7 +120,7 @@ def xml_2_db(path, xml):
                                       dost_p, w_p, mr, doctype, docser, docnum, snils, adres, ident_sp, id_pac, inv, mse))
 
             except cx_Oracle.Error as err:
-                print(f'Query error: {err}')
+                print(f'Query error при добавлении в PT: {err}')
 
 
         if xml[0] == 'H':
@@ -129,24 +129,22 @@ def xml_2_db(path, xml):
             period = '20' + xml[8:10] + xml[10:12]
             glpu = xml[12:18]
 
-            db = con('db')
-            dbcur = db.cursor()
             element_xml_root = tree.getroot()
             for element in element_xml_root.findall('ZAP'):
                 for pac in element.findall('PACIENT'):
-                    idpac = convert_none_type(pac.find('ID_PAC'))
-                    vpolis = convert_none_type(pac.find('VPOLIS'))
-                    spolis = convert_none_type(pac.find('SPOLIS'))
-                    npolis = convert_none_type(pac.find('NPOLIS'))
-                    stokato = pac.find('ST_OKATO').text
-                    smo = convert_none_type(pac.find('SMO'))
-                    smoogrn = convert_none_type(pac.find('SMO_OGRN'))
-                    smook = convert_none_type(pac.find('SMO_OK'))
-                    smonam = convert_none_type(pac.find('SMO_NAM'))
-                    novor = convert_none_type(pac.find('NOVOR'))
-                    vnov_d = convert_none_type(pac.find('VNOV_D'))
-
                     try:
+                        idpac = convert_none_type(pac.find('ID_PAC'))
+                        vpolis = convert_none_type(pac.find('VPOLIS'))
+                        spolis = convert_none_type(pac.find('SPOLIS'))
+                        npolis = convert_none_type(pac.find('NPOLIS'))
+                        # stokato = pac.find('ST_OKATO').text
+                        smo = convert_none_type(pac.find('SMO'))
+                        smoogrn = convert_none_type(pac.find('SMO_OGRN'))
+                        smook = convert_none_type(pac.find('SMO_OK'))
+                        smonam = convert_none_type(pac.find('SMO_NAM'))
+                        novor = convert_none_type(pac.find('NOVOR'))
+                        vnov_d = convert_none_type(pac.find('VNOV_D'))
+
 
                         queryPT = dbcur.prepare('UPDATE PT05S50{} '
                                               'SET vpolis = :vpolis, spolis = :spolis, npolis = :npolis, smo = :smo,'
@@ -158,7 +156,7 @@ def xml_2_db(path, xml):
                                               smonam, novor, vnov_d, idpac, glpu))
 
                     except cx_Oracle.Error as err:
-                        print(f'Query error: {err}')
+                        print(f'Query error при UPDATE в PT: {err}')
 
                 for slu in element.findall('SLUCH'):
                     idcase = slu.find('IDCASE').text
@@ -209,7 +207,14 @@ def xml_2_db(path, xml):
                     nrisoms = slu.find('NRISOMS').text
                     ds1_pr = slu.find('DS1_PR').text
                     ds4 = slu.find('DS4').text
-                    nazn = slu.find('NAZN').text
+
+                    if convert_none_type(slu.find('NAZN')) == '':
+                        nazn = convert_none_type(slu.find('NAZR'))
+                    elif convert_none_type(slu.find('NAZR')) == '':
+                        nazn = convert_none_type(slu.find('NAZN'))
+                    else:
+                        nazn = convert_none_type(slu.find('NAZN'))
+
                     naz_sp = slu.find('NAZ_SP').text
                     naz_v = slu.find('NAZ_V').text
                     naz_pmp = slu.find('NAZ_PMP').text
@@ -271,7 +276,7 @@ def xml_2_db(path, xml):
                                     idcase, 0, idpac, stat, nprdat, talnum))
 
                     except cx_Oracle.Error as err:
-                        print(f'Query error: {err} lpu-{lpu} idcase-{idcase}')
+                        print(f'Query error при добавлении в TT: {err} lpu-{lpu} idcase-{idcase}')
 
                     for usl in slu.findall('USL'):
                         idserv = usl.find('IDSERV').text
@@ -329,7 +334,7 @@ def xml_2_db(path, xml):
                                                   spolis_u, npolis_u, stand, p_per, npl, idsh, idpac, stat_u))
 
                         except cx_Oracle.Error as err:
-                            print(f'Query error: {err} lpu-{lpu_u} idserv-{idserv}')
+                            print(f'Query error при добавлении в UT: {err} lpu-{lpu_u} idserv-{idserv}')
 
                             for vmp_oper in usl.findall('HRRGD'):
                                 vid_vme = vmp_oper.find('VID_VME').text
@@ -337,10 +342,14 @@ def xml_2_db(path, xml):
                                 idnomk = vmp_oper.find('IDNOMK').text
                                 name_o = vmp_oper.find('NAME_O').text
 
-                                query = dbcur.prepare('INSERT INTO NT05S50{} (glpu, mcod, idserv, hkod, ksgh, idnomk, name_o) '
-                                                      'values (:glpu, :mcod, :idserv, :hkod, :ksgh, :idnomk, :name_o)'.format(period))
+                                try:
+                                    query = dbcur.prepare('INSERT INTO NT05S50{} (glpu, mcod, idserv, hkod, ksgh, idnomk, name_o) '
+                                                          'values (:glpu, :mcod, :idserv, :hkod, :ksgh, :idnomk, :name_o)'.format(period))
 
-                                dbcur.execute(query, (lpu, lpu_1, idserv, vid_vme, ksgh, idnomk, name_o))
+                                    dbcur.execute(query, (lpu, lpu_1, idserv, vid_vme, ksgh, idnomk, name_o))
+
+                                except cx_Oracle.Error as err:
+                                    print(f'Query error при добавлении в NT: {err}')
 
             for element_doc in element_xml_root.findall('VRACH'):
                 kod = element_doc.find('KOD').text
@@ -356,7 +365,7 @@ def xml_2_db(path, xml):
                     dbcur.execute(queryDT, (glpu, mcod, kod, fio, idmsp, spec))
 
                 except cx_Oracle.Error as err:
-                    print(f'Query error: {err}')
+                    print(f'Query error при добавлении в DT: {err}')
 
             for element_shet in element_xml_root.findall('SCHET'):
                 code = element_shet.find('CODE').text
@@ -380,7 +389,7 @@ def xml_2_db(path, xml):
                     dbcur.execute(queryST, (code, code_mo, year_s, month_s, nschet, dt, plat, summav, coments, summap))
 
                 except cx_Oracle.Error as err:
-                    print(f'Query error: {err}')
+                    print(f'Query error при добавлении в ST: {err}')
 
             try:
                 queryF = dbcur.prepare('INSERT INTO all_files (date_in, glpu, priz, year, month, date_out) '
@@ -389,18 +398,22 @@ def xml_2_db(path, xml):
                 dt = os.path.getmtime(path + '\\' + xml)
                 dt = datetime.fromtimestamp(dt)
                 dbcur.execute(queryF, (dt, glpu, xml[18:19], year, month))
-                # print(glpu + ' = '+ xml[18:19] + ' = '+ year + ' = '+ month)
+
             except cx_Oracle.Error as err:
-                print(f'Query error: {err}')
+                print(f'Query error при добавлении в all_files: {err}')
 
         db.commit()
 
         os.remove(path + '\\' + xml)
 
-        if xml[0] == 'H':
-            dbcur.execute("CALL SYSTEM.RUN_EXP_PROC('{}', '{}')".format(year+month, glpu_g))
-
-        dbcur.close()
+        try:
+            if xml[0] == 'H':
+                query_RUN = "CALL SYSTEM.RUN_EXP_PROC('{}', '{}')".format(year + month, glpu_g)
+                dbcur.execute(query_RUN)
+                sleep(2)
+            dbcur.close()
+        except cx_Oracle.Error as err:
+            print(f'Query error при вызове SYSTEM.RUN_EXP_PROC: {err}')
 
     except IOError as err:
         print(err)

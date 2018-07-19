@@ -6,68 +6,39 @@ CREATE OR REPLACE PROCEDURE SYSTEM.EXP_USL_AGE (period VARCHAR2, s_glpu VARCHAR2
   idsluch ut.id_sluch%type;
   idserv ut.idserv%type;
   mcod ut.lpu_1%type;
+  summv ut.SUMV_USL%type;
   cd_usl ut.CODE_USL%type;
 
-
-  query1 VARCHAR2(1000);
+  query1 VARCHAR2(1500);
   TYPE EmpCurTyp IS REF CURSOR;
   cur1 EmpCurTyp;
-
-  query2 VARCHAR2(1000);
-  cur2 EmpCurTyp;
 BEGIN
 
-  query1 := 'SELECT ut.id_pac, ut.id_sluch, ut.idserv, ut.lpu_1, ut.CODE_USL
+  query1 := 'SELECT distinct(ut.id_sluch) as id_sluch, ut.id_pac, ut.lpu_1, SUM(ut.SUMV_USL) AS summv,
+                      MAX(ut.idserv) AS idserv
                FROM '||period||' ut
-               WHERE ut.LPU = '||''''||s_glpu||''' AND
-                   SUBSTR(TRIM(ut.CODE_USL), -1, 1) = '''||2||''' AND
-                      ut.id_pac||ut.LPU IN (SELECT
-                                              ps.ID_PAC||ps.GLPU
-                                              FROM PT05S50'||SUBSTR(period, -6, 6)||' ps
+               WHERE ut.LPU = '||''''||s_glpu||''' AND (SUBSTR(TRIM(ut.CODE_USL), -1, 1) = '''||1||''' AND
+                      EXISTS (SELECT ps.ID_PAC, ps.GLPU FROM PT05S50'||SUBSTR(period, -6, 6)||' ps
                                               WHERE ps.GLPU = '||''''||s_glpu||''' AND
-                                                  TRUNC(months_between(ut.DATE_IN, ps.DR) / 12) > 18) AND
-                             ut.id_pac||ut.lpu not in (select s.id_pac||s.glpu
-                                                           from sankc s
-                                                           where s.glpu = '||''''||s_glpu||''' and
-                                                                 s.period = '||''''||SUBSTR(period, -6, 6)||''')';
-
+                                                  TRUNC(months_between(ut.DATE_IN, ps.DR) / 12) < 18 AND
+                                                  ut.id_pac = ps.id_pac AND ut.LPU = ps.glpu)
+                                      OR SUBSTR(TRIM(ut.CODE_USL), -1, 1) = '''||2||''' AND
+                      EXISTS (SELECT ps.ID_PAC, ps.GLPU FROM PT05S50'||SUBSTR(period, -6, 6)||' ps
+                                              WHERE ps.GLPU = '||''''||s_glpu||''' AND
+                                                  TRUNC(months_between(ut.DATE_IN, ps.DR) / 12) > 18 AND
+                                                  ut.id_pac = ps.id_pac AND ut.LPU = ps.glpu))
+              GROUP BY id_sluch, id_pac, lpu_1';
 
  OPEN cur1 for query1;
   LOOP
-    FETCH cur1 INTO idpacs, idsluch, idserv, mcod, cd_usl;
+    FETCH cur1 INTO idsluch, idpacs, mcod, summv, idserv;
       EXIT WHEN cur1%NOTFOUND;
 
-      INSERT INTO SANKC (glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period)
-          VALUES (s_glpu, mcod, '5.1.4.', 4, idpacs, idsluch, idserv, SYSDATE, SUBSTR(period, -6, 6));
-
+      INSERT INTO SANKC (glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period, comments, summ_shtr)
+          VALUES (s_glpu, mcod, '5.1.4.', 4, idpacs, idsluch, idserv, SYSDATE, SUBSTR(period, -6, 6), 'Не соответствие услуги возрасту', summv);
+      COMMIT;
   END LOOP;
   CLOSE cur1;
 
-  query2 := 'SELECT ut.id_pac, ut.id_sluch, ut.idserv, ut.lpu_1, ut.CODE_USL
-               FROM '||period||' ut
-               WHERE ut.LPU = '||''''||s_glpu||''' AND
-                   SUBSTR(TRIM(ut.CODE_USL), -1, 1) = '''||1||''' AND
-                      ut.id_pac||ut.LPU IN (SELECT
-                                              ps.ID_PAC||ps.GLPU
-                                              FROM PT05S50'||SUBSTR(period, -6, 6)||' ps
-                                              WHERE ps.GLPU = '||''''||s_glpu||''' AND
-                                                  TRUNC(months_between(ut.DATE_IN, ps.DR) / 12) < 18) AND
-                             ut.id_pac||ut.lpu not in (select s.id_pac||s.glpu
-                                                           from sankc s
-                                                           where s.glpu = '||''''||s_glpu||''' and
-                                                                 s.period = '||''''||SUBSTR(period, -6, 6)||''')';
-
-
- OPEN cur2 for query2;
-  LOOP
-    FETCH cur2 INTO idpacs, idsluch, idserv, mcod, cd_usl;
-      EXIT WHEN cur2%NOTFOUND;
-
-      INSERT INTO SANKC (glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period)
-          VALUES (s_glpu, mcod, '5.1.4.', 4, idpacs, idsluch, idserv, SYSDATE, SUBSTR(period, -6, 6));
-
-  END LOOP;
-  CLOSE cur2;
-  COMMIT;
 END;
 /
