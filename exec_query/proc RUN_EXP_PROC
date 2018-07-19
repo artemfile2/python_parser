@@ -14,5 +14,7 @@ BEGIN
 
   EXP_DB_ERR('PT05S50'||period, s_glpu);
 
+  TO_XLS(period, s_glpu);
+
 END;
 /

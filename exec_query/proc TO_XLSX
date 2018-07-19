@@ -1,0 +1,12 @@
+CREATE OR REPLACE PROCEDURE SYSTEM.TO_XLS (period VARCHAR2, s_glpu VARCHAR2)
+AS
+  --v_dir VARCHAR2(40) :='D:\SHARED\test2\';
+  v_file VARCHAR2(30) := 'my_TEST';
+BEGIN
+  as_xlsx.clear_workbook;
+  --as_xlsx.new_sheet('test');
+  as_xlsx.query2sheet('SELECT * FROM SANKC WHERE GLPU = '||''''||s_glpu||''' ' ||
+                      'AND PERIOD = '||''''||period||'''' );
+  as_xlsx.save('V_DIR', v_file||s_glpu||'.xlsx');
+END;
+/
