@@ -14,20 +14,24 @@ CREATE OR REPLACE PROCEDURE SYSTEM.EXP_USL_AGE (period VARCHAR2, s_glpu VARCHAR2
   cur1 EmpCurTyp;
 BEGIN
 
-  query1 := 'SELECT distinct(ut.id_sluch) as id_sluch, ut.id_pac, ut.lpu_1, SUM(ut.SUMV_USL) AS summv,
-                      MAX(ut.idserv) AS idserv
-               FROM '||period||' ut
-               WHERE ut.LPU = '||''''||s_glpu||''' AND (SUBSTR(TRIM(ut.CODE_USL), -1, 1) = '''||1||''' AND
-                      EXISTS (SELECT ps.ID_PAC, ps.GLPU FROM PT05S50'||SUBSTR(period, -6, 6)||' ps
-                                              WHERE ps.GLPU = '||''''||s_glpu||''' AND
-                                                  TRUNC(months_between(ut.DATE_IN, ps.DR) / 12) < 18 AND
-                                                  ut.id_pac = ps.id_pac AND ut.LPU = ps.glpu)
-                                      OR SUBSTR(TRIM(ut.CODE_USL), -1, 1) = '''||2||''' AND
-                      EXISTS (SELECT ps.ID_PAC, ps.GLPU FROM PT05S50'||SUBSTR(period, -6, 6)||' ps
-                                              WHERE ps.GLPU = '||''''||s_glpu||''' AND
-                                                  TRUNC(months_between(ut.DATE_IN, ps.DR) / 12) > 18 AND
-                                                  ut.id_pac = ps.id_pac AND ut.LPU = ps.glpu))
-              GROUP BY id_sluch, id_pac, lpu_1';
+ query1 := 'SELECT distinct(ut.id_sluch) as id_sluch, ut.id_pac, ut.lpu_1,
+              SUM(ut.SUMV_USL) AS summv, MAX(ut.idserv) AS idserv
+              FROM UT05S50'||period||' ut
+              LEFT JOIN (SELECT ID_PAC, GLPU, DR FROM PT05S50'||period||'
+                             WHERE GLPU = '||''''||s_glpu||''' AND novor = '''||0||''') ps
+              ON ut.id_pac = ps.id_pac AND ut.LPU = ps.glpu
+              WHERE ut.LPU = '||''''||s_glpu||''' AND
+                  ((SUBSTR(TRIM(ut.CODE_USL), -1, 1) IN ('''||1||''') AND
+                  months_between(ut.DATE_IN, ps.DR) / 12 < 17.9)
+                  OR
+                  (SUBSTR(TRIM(ut.CODE_USL), -1, 1) IN ('''||2||''') AND
+                  months_between(ut.DATE_IN, ps.DR) / 12 > 18.1)) AND
+                  NOT EXISTS (SELECT s.ID_PAC, s.GLPU
+                                   FROM SANKC s
+                                   WHERE s.glpu = '||''''||s_glpu||''' AND s.period = '||''''||s_glpu||''' AND
+                                      ps.id_pac = s.ID_PAC AND ps.GLPU = s.GLPU)
+              GROUP BY ut.id_sluch, ut.id_pac, ut.lpu_1';
+
 
  OPEN cur1 for query1;
   LOOP
@@ -35,7 +39,7 @@ BEGIN
       EXIT WHEN cur1%NOTFOUND;
 
       INSERT INTO SANKC (glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period, comments, summ_shtr)
-          VALUES (s_glpu, mcod, '5.1.4.', 4, idpacs, idsluch, idserv, SYSDATE, SUBSTR(period, -6, 6), 'Не соответствие услуги возрасту', summv);
+          VALUES (s_glpu, mcod, '5.1.4.', 4, idpacs, idsluch, idserv, SYSDATE, period, 'Не соответствие услуги возрасту', summv);
       COMMIT;
   END LOOP;
   CLOSE cur1;

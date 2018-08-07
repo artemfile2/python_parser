@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+
 import cx_Oracle
 import os
 from datetime import *
+
 
 def con(type = 'cur'):
     # Выполняем подключение с отловом ошибок
@@ -23,10 +26,10 @@ def get_glpu():
     try:
         dbcur = con()
         query = dbcur.prepare('SELECT sg.GLPU, sg.MCOD, sg.NAME, sg.M_NAMEF, sg.IDUMP FROM S_LPU sg '
-                              'INNER JOIN (SELECT DISTINCT glpu FROM S_LPU WHERE glpu <> {!r}) sl '
+                              'INNER JOIN (SELECT DISTINCT glpu FROM S_LPU WHERE glpu <> :g) sl '
                               'ON sg.MCOD = sl.GLPU '
-                              'ORDER BY sg.GLPU'.format('054503'))
-        dbcur.execute(query)
+                              'ORDER BY sg.GLPU')
+        dbcur.execute(query, ('054503',))
 
         # Получаем данные.
         glpu = dbcur.fetchall()
@@ -37,6 +40,7 @@ def get_glpu():
 
     except cx_Oracle.Error as err:
         print("Query error: {}".format(err))
+
 
 def get_slpu():
     try:
@@ -52,6 +56,7 @@ def get_slpu():
     except cx_Oracle.Error as err:
         print("Query error: {}".format(err))
 
+
 def get_slpuonglpu(glpu):
     try:
         dbcur = con()
@@ -65,10 +70,11 @@ def get_slpuonglpu(glpu):
     except cx_Oracle.Error as err:
         print("Query error: {}".format(err))
 
-"""
-Функция добавления записей врачей из XML в базу
-"""
+
 def insert_doc(glpu, mcod, kod, fio, idmsp, spec):
+    """
+    Функция добавления записей врачей из XML в базу
+    """
     try:
         db = con('db')
         dbcur = db.cursor()
@@ -82,10 +88,10 @@ def insert_doc(glpu, mcod, kod, fio, idmsp, spec):
         print("Query error: {}".format(err))
 
 
-"""
-Функция добавления записи счета из XML в базу
-"""
 def insert_schet(code, code_mo, year, month, nschet, dschet, plat, summav, coments, summap):
+    """
+    Функция добавления записи счета из XML в базу
+    """
     try:
         db = con('db')
         dbcur = db.cursor()
@@ -99,12 +105,11 @@ def insert_schet(code, code_mo, year, month, nschet, dschet, plat, summav, comen
         print("Query error: {}".format(err))
 
 
-"""
-Функция добавления записи пациентов из XML в базу
-"""
 def insert_pacient(glpu, id_pac, vpolis, spolis, npolis,
                  st_okato, smo, smoogrn, smo_ok, smo_nam, novor, vnov_d):
-
+    """
+    Функция добавления записи пациентов из XML в базу
+    """
     try:
         db = con('db')
         dbcur = db.cursor()
@@ -122,12 +127,12 @@ def insert_pacient(glpu, id_pac, vpolis, spolis, npolis,
         print(f'Query error: {err}')
 
 
-"""
-Функция добавления записи персональных данных пациентов из XML в базу
-"""
 def insert_pacpers(glpu, id_pac, fam, im , ot , w, dr, dost, fam_p, im_p, ot_p, dr_p,
                    dost_p, w_p, mr, doctype, docser, docnum, snils, okatog,
                    okatop, adres, ident_sp, comentp, vpolis, novor):
+    """
+    Функция добавления записи персональных данных пациентов из XML в базу
+    """
     try:
         db = con('db')
         dbcur = db.cursor()
@@ -154,10 +159,6 @@ def insert_pacpers(glpu, id_pac, fam, im , ot , w, dr, dost, fam_p, im_p, ot_p, 
         print("Query error: {}".format(err))
 
 
-
-"""
-Функция добавления записи случаев SLUCH пациентов из XML в базу
-"""
 def insert_sluch(lpu, lpu_1, idcase, usl_ok, vidpom, for_pom, disp, vid_hmp,
                  metod_hmp, npr_mo, extr, podr, profil, det, nhistory, date_1, date_2, ds0,
                  ds1, ds2, ds3, vnov_m, code_mes1, code_mes2, rslt, rslt_d, ishod, prvs,
@@ -165,6 +166,9 @@ def insert_sluch(lpu, lpu_1, idcase, usl_ok, vidpom, for_pom, disp, vid_hmp,
                  sank_it, tal_d, tal_p, vbr, p_otk, nrisoms, ds1_pr, ds4, nazn, naz_sp,
                  naz_v, naz_pmp, naz_pk, pr_d_n, comentsl, pr_nov, novor_sl, orders,
                  t_order, kem_prov, smo_sl):
+    """
+    Функция добавления записи случаев SLUCH пациентов из XML в базу
+    """
     try:
         db = con('db')
         dbcur = db.cursor()
@@ -205,13 +209,14 @@ def insert_sluch(lpu, lpu_1, idcase, usl_ok, vidpom, for_pom, disp, vid_hmp,
         print("Query error: {}".format(err))
 
 
-"""
-Функция добавления записи услуг пациентов из XML в базу
-"""
+
 def insert_usl(lpu_u, lpu_1u, idcase, idserv, podr, profil_u, det, date_in,
                date_out , ds , code_usl, ed_col_u, koef_k, pouh, zak, kol_usl,
                tarif, sumv_usl, prvs, code_md, comentu, dir2, gr_zdorov, student,
                spolis_u, npolis_u, stand, p_per, npl, idsh):
+    """
+    Функция добавления записи услуг пациентов из XML в базу
+    """
     try:
         db = con('db')
         dbcur = db.cursor()
@@ -237,10 +242,11 @@ def insert_usl(lpu_u, lpu_1u, idcase, idserv, podr, profil_u, det, date_in,
     except cx_Oracle.Error as err:
         print(f'Query error: {err}')
 
-"""
-Функция добавления записи счета из XML в базу
-"""
+
 def insert_oper(lpu, lpu_1, idserv, vid_vme, ksgh, idnomk, name_o):
+    """
+    Функция добавления записи счета из XML в базу
+    """
     try:
         db = con('db')
         dbcur = db.cursor()
@@ -251,8 +257,6 @@ def insert_oper(lpu, lpu_1, idserv, vid_vme, ksgh, idnomk, name_o):
 
     except cx_Oracle.Error as err:
         print("Query error: {}".format(err))
-
-
 
 
 def commitDB():

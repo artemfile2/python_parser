@@ -7,30 +7,32 @@ CREATE OR REPLACE PROCEDURE SYSTEM.EXP_DATEUSL (period VARCHAR2, s_glpu VARCHAR2
   idserv ut.idserv%type;
   mcod ut.lpu_1%type;
 
-  query2 VARCHAR2(500);
+  query2 VARCHAR2(1000);
   TYPE EmpCurTyp IS REF CURSOR;
   cur2 EmpCurTyp;
 
 BEGIN
   query2 := 'SELECT ut.id_pac, ut.id_sluch, ut.idserv, ut.lpu_1
-                 FROM '||period||' ut
+                 FROM UT05S50'||period||' ut
                  WHERE ut.DATE_OUT < ut.DATE_IN AND ut.lpu = '||''''||s_glpu||''' AND
-                     ut.id_pac||ut.LPU NOT IN (SELECT s.ID_PAC||s.GLPU
-                                                   FROM SANKC s
-                                                   WHERE s.glpu = '||''''||s_glpu||''' AND
-                                                         s.period = '||''''||SUBSTR(period, -6, 6)||''')';
+                     NOT EXISTS (SELECT s.ID_PAC, s.GLPU
+                                           FROM SANKC s
+                                           WHERE s.glpu = '||''''||s_glpu||''' AND
+                                                 s.period = '||''''||period||''' AND
+                                                 ut.id_pac = s.ID_PAC AND
+                                                 ut.LPU = s.GLPU)';
 
  OPEN cur2 for query2;
   LOOP
     FETCH cur2 INTO idpacs, idsluch, idserv, mcod;
       EXIT WHEN cur2%NOTFOUND;
 
-      INSERT INTO SANKC (glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period)
-          VALUES (s_glpu, mcod, '5.1.4.', 19, idpacs, idsluch, idserv, SYSDATE, SUBSTR(period, -6, 6));
-
+      INSERT INTO SANKC (glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period, comments)
+          VALUES (s_glpu, mcod, '5.1.4.', 19, idpacs, idsluch, idserv, SYSDATE, period, 'Дата начала лечения больше даты завершения');
+      COMMIT;
   END LOOP;
   CLOSE cur2;
-  COMMIT;
+
 
 END;
 /

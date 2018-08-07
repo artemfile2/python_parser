@@ -1,4 +1,4 @@
-#code in utf-8
+# -*- coding: utf-8 -*-
 # Модуль для извлечения файлов из ZIP архива
 
 import zipfile

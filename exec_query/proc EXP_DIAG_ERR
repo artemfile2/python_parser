@@ -18,12 +18,12 @@ BEGIN
   dot := '.';
 
   query := 'SELECT ut.id_pac, ut.id_sluch, ut.idserv, ut.lpu_1
-              FROM '||period||' ut
+              FROM UT05S50'||period||' ut
               WHERE ut.lpu = '||''''||s_glpu||''' AND
                   REPLACE(TRIM(ut.DS), '''||dot||''') NOT IN (SELECT TRIM(h.CODE) FROM HEDIAG h) AND
                   ut.id_pac||ut.LPU NOT IN (SELECT s.ID_PAC||s.GLPU
                                                  FROM SANKC s
-                                                 WHERE s.glpu = '||''''||s_glpu||''' AND s.period = '||''''||SUBSTR(period, -6, 6)||''')';
+                                                 WHERE s.glpu = '||''''||s_glpu||''' AND s.period = '||''''||period||''')';
 
   DBMS_OUTPUT.PUT_LINE(query);
 
@@ -32,12 +32,11 @@ BEGIN
     FETCH cur INTO idpacs, idsluch, idserv, mcod;
       EXIT WHEN cur%NOTFOUND;
 
-      INSERT INTO SANKC (glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period)
-          VALUES (s_glpu, mcod, '5.1.4.', 5, idpacs, idsluch, idserv, SYSDATE, SUBSTR(period, -6, 6));
-
+      INSERT INTO SANKC (glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period, comments)
+          VALUES (s_glpu, mcod, '5.1.4.', 5, idpacs, idsluch, idserv, SYSDATE, period, 'Отсут-ет, непр-ый код по МКБ');
+      COMMIT;
   END LOOP;
   CLOSE cur;
-  COMMIT;
 
 END;
 /
