@@ -3,6 +3,8 @@ AS
   --v_dir VARCHAR2(40) :='D:\SHARED\test2\';
   v_file VARCHAR2(30) := 'my_TEST';
 BEGIN
+ -- create or replace directory V_DIR as 'D:\SHARED\TEST2';
+
   as_xlsx.clear_workbook;
   --as_xlsx.new_sheet('test');
   as_xlsx.query2sheet('SELECT * FROM SANKC WHERE GLPU = '||''''||s_glpu||''' ' ||

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from main_form import *
 import sys
 from work_xml import *

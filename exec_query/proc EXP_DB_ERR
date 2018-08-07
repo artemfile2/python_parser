@@ -17,15 +17,15 @@ BEGIN
 
   query3 := 'SELECT distinct(ut.id_sluch) as id_sluch, ut.id_pac, ut.lpu_1, SUM(ut.SUMV_USL) AS summv,
                 MAX(ut.idserv) AS idserv, cur.IDENT_SP
-                FROM UT05S50'||SUBSTR(period, -6, 6)||' ut
+                FROM UT05S50'||period||' ut
                 INNER JOIN ( SELECT ps.ID_PAC, ps.IDENT_SP
-                               FROM '||period||' ps
+                               FROM PT05S50'||period||' ps
                                WHERE ps.glpu = '||''''||s_glpu||''' AND
                                    ps.IDENT_SP IS NOT NULL AND
                                    ps.id_pac||ps.GLPU NOT IN (SELECT s.ID_PAC||s.GLPU
                                                                  FROM SANKC s
                                                                  WHERE s.glpu = '||''''||s_glpu||''' AND
-                                                                       s.period = '||''''||SUBSTR(period, -6, 6)||''')) cur
+                                                                       s.period = '||''''||period||''')) cur
                   ON ut.ID_PAC = cur.ID_PAC
                   GROUP BY ut.id_sluch, ut.id_pac, ut.lpu_1, cur.IDENT_SP
                   ORDER BY ut.ID_PAC';
@@ -37,11 +37,11 @@ BEGIN
 
       IF identsp = 0 THEN
           INSERT INTO SANKC (glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period, comments, summ_shtr)
-              VALUES (s_glpu, 'mcod', '5.2.2.', 2, idpacs, idsluch, idserv, SYSDATE, SUBSTR(period,-6,6), 'НЕ НАЙДЕН В БД СРЗ', summv);
+              VALUES (s_glpu, 'mcod', '5.2.2.', 2, idpacs, idsluch, idserv, SYSDATE, period, 'НЕ НАЙДЕН В БД СРЗ', summv);
           COMMIT;
       ELSIF identsp = 2 THEN
           INSERT INTO SANKC (glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period, comments, summ_shtr)
-              VALUES (s_glpu, 'mcod', '5.2.2.', 3, idpacs, idsluch, idserv, SYSDATE, SUBSTR(period,-6,6), 'НЕВЕРНЫЙ КОД СМО', summv);
+              VALUES (s_glpu, 'mcod', '5.2.2.', 3, idpacs, idsluch, idserv, SYSDATE, period, 'НЕВЕРНЫЙ КОД СМО', summv);
           COMMIT;
       END IF;
 

@@ -52,4 +52,14 @@ BEGIN
         CONSTRAINT PK_UT05S50'||period||' PRIMARY KEY (IDSERV) USING INDEX TABLESPACE SYSTEM STORAGE (INITIAL 64 K
                                                                                                   MAXEXTENTS UNLIMITED)
       )';
+
+
+  execute IMMEDIATE
+    'CREATE INDEX SYSTEM.IDX_UT05S50'||period||'_ID_PAC ON SYSTEM.UT05S50'||period||' (ID_PAC)';
+
+
+  execute IMMEDIATE
+    'CREATE INDEX SYSTEM.IDX_UT05S50'||period||'_LPU ON SYSTEM.UT05S50'||period||' (LPU)';
+
 END;
+/

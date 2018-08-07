@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import timeit
 from time import strftime, localtime, sleep
 
@@ -26,8 +28,8 @@ def create_tables(period):
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Critical)
         msg.setText(f"Query error: {err}")
-        msg.setWindowTitle("Ошибка в запросе")
-        msg.setDetailedText(f"Query error: {err}")
+        msg.setWindowTitle("Ошибка в запросе CREATE_TABLE")
+        msg.setDetailedText(f"Query error CREATE_TABLE: {err}")
         msg.exec_()
         print(f"Query error: {err}")
 
@@ -39,8 +41,9 @@ def check_table(name_table):
     try:
         db = con('db')
         dbcur = db.cursor()
-        queryCheck = """SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) = UPPER({!r})""".format(name_table)
-        dbcur.execute(queryCheck)
+        # queryCheck = """SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) = UPPER({!r})""".format(name_table)
+        queryCheck = """SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) = UPPER(:name_table)"""
+        dbcur.execute(queryCheck, (name_table,))
         table_check = dbcur.fetchone()
         if table_check is None:
             return False
@@ -60,7 +63,6 @@ def extractZipXml(self, year, month, dir_XmlZip, tmp):
     """
     Функция работы с архивом
     """
-
     if check_table('ST05S50' + year + month):
         self.ui.textEdit.append('Таблицы за отчетный период ' + year + ' ' + month +
                                 ' найдены, данные с XML загружаются...')

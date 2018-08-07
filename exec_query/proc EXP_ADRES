@@ -2,6 +2,8 @@ CREATE OR REPLACE PROCEDURE SYSTEM.EXP_ADRES(period VARCHAR2, s_glpu VARCHAR2)
   IS
   pragma autonomous_transaction;
 
+  --idpacs pt.id_pac%type;
+  --mcod pt.mcod%type;
   idpacs ut.id_pac%type;
   idsluch ut.id_sluch%type;
   idserv ut.idserv%type;
@@ -16,18 +18,18 @@ CREATE OR REPLACE PROCEDURE SYSTEM.EXP_ADRES(period VARCHAR2, s_glpu VARCHAR2)
 BEGIN
 
   query := 'SELECT distinct(ut.id_sluch) as id_sluch, ut.id_pac, ut.lpu_1, SUM(ut.SUMV_USL) AS summv, MAX(ut.idserv) AS idserv
-                    FROM UT05S50'||SUBSTR(period, -6, 6)||' ut
-                    INNER JOIN (SELECT ps.ID_PAC
-                                 FROM '||period||' ps
+                    FROM UT05S50'||period||' ut
+                    INNER JOIN (SELECT ps.ID_PAC, ps.glpu
+                                 FROM PT05S50'||period||' ps
                                  WHERE ps.glpu = '||''''||s_glpu||''' AND
                                        NOT EXISTS (SELECT s.ID_PAC, s.GLPU
                                                      FROM SANKC s
-                                                     WHERE s.glpu = '||''''||s_glpu||''' AND s.period = '||''''||SUBSTR(period, -6, 6)||''' AND
+                                                     WHERE s.glpu = '||''''||s_glpu||''' AND s.period = '||''''||period||''' AND
                                                         ps.id_pac = s.ID_PAC AND ps.GLPU = s.GLPU)
                                  GROUP BY ps.ID_PAC, ps.ADRES, ps.GLPU
-                                 HAVING REGEXP_COUNT(ps.ADRES, '' '', 1) <= 2 AND LENGTH(ps.ADRES) < 11
+                                 HAVING REGEXP_COUNT(ps.ADRES, '' '', 1) >= 1 AND LENGTH(ps.ADRES) < 9
                                  ORDER BY ps.GLPU, ps.ID_PAC) cur
-                      ON ut.ID_PAC = cur.ID_PAC
+                      ON ut.ID_PAC = cur.ID_PAC AND ut.LPU = cur.GLPU
                    GROUP BY ut.id_sluch, ut.id_pac, ut.lpu_1
                    ORDER BY ut.ID_PAC';
 
@@ -37,7 +39,7 @@ BEGIN
       EXIT WHEN cur1%NOTFOUND;
 
       INSERT INTO SANKC (glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period, comments, summ_shtr)
-        VALUES (s_glpu, 'mcod', '5.1.3.', 20, idpacs, idsluch, idserv, SYSDATE, SUBSTR(period,-6,6), 'Наличие незаполненных полей (адрес)', summv);
+        VALUES (s_glpu, 'mcod', '5.1.3.', 20, idpacs, idsluch, idserv, SYSDATE, period, 'Наличие незаполненных полей (адрес)', summv);
       COMMIT;
   END LOOP;
   CLOSE cur1;

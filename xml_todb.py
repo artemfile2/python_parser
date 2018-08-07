@@ -1,4 +1,6 @@
-import os
+# -*- coding: utf-8 -*-
+
+# import os
 import datetime
 import xml.etree.ElementTree as ET
 from PyQt5 import QtWidgets
@@ -6,11 +8,13 @@ from time import sleep
 
 from connect import *
 
+
 def convert_none_type(obj):
     """
         функция проверки поля в XML
         если поля нет или NUll то
         чтобы ошибки не было возвращаю пустую строку
+        :type obj: object
     """
     try:
         if obj is None:
@@ -29,22 +33,23 @@ def delete_from_db(period, glpu):
         db = con('db')
         dbcur = db.cursor()
 
-        queryPTs = """DELETE FROM PT05S50{} WHERE glpu = {!r}""".format(period, glpu)
-        dbcur.execute(queryPTs)
-        queryTTs = """DELETE FROM TT05S50{} WHERE glpu = {!r}""".format(period, glpu)
-        dbcur.execute(queryTTs)
-        queryDTs = """DELETE FROM DT05S50{} WHERE glpu = {!r}""".format(period, glpu)
-        dbcur.execute(queryDTs)
-        querySTs = """DELETE FROM ST05S50{} WHERE glpu = {!r}""".format(period, glpu)
-        dbcur.execute(querySTs)
-        queryUTs = """DELETE FROM UT05S50{} WHERE lpu = {!r}""".format(period, glpu)
-        dbcur.execute(queryUTs)
-        queryNTs = """DELETE FROM NT05S50{} WHERE glpu = {!r}""".format(period, glpu)
-        dbcur.execute(queryNTs)
-        querySNK = """DELETE FROM SANKC WHERE period = {!r} and glpu = {!r}""".format(period, glpu)
-        dbcur.execute(querySNK)
-        # qu = dbcur.prepare('CALL SYSTEM.DELETE_DATA(:period, :glpu)')
-        # dbcur.execute(qu, (period, glpu))
+        # queryPTs = """DELETE FROM PT05S50{} WHERE glpu = {!r}""".format(period, glpu)
+        # dbcur.execute(queryPTs)
+        # queryTTs = """DELETE FROM TT05S50{} WHERE glpu = {!r}""".format(period, glpu)
+        # dbcur.execute(queryTTs)
+        # queryDTs = """DELETE FROM DT05S50{} WHERE glpu = {!r}""".format(period, glpu)
+        # dbcur.execute(queryDTs)
+        # querySTs = """DELETE FROM ST05S50{} WHERE glpu = {!r}""".format(period, glpu)
+        # dbcur.execute(querySTs)
+        # queryUTs = """DELETE FROM UT05S50{} WHERE lpu = {!r}""".format(period, glpu)
+        # dbcur.execute(queryUTs)
+        # queryNTs = """DELETE FROM NT05S50{} WHERE glpu = {!r}""".format(period, glpu)
+        # dbcur.execute(queryNTs)
+        # querySNK = """DELETE FROM SANKC WHERE period = {!r} and glpu = {!r}""".format(period, glpu)
+        # dbcur.execute(querySNK)
+
+        dbcur.execute("""CALL SYSTEM.DELETE_DATA({!r}, {!r})""".format(period, glpu))
+
         db.commit()
         dbcur.close()
 
@@ -52,8 +57,8 @@ def delete_from_db(period, glpu):
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Critical)
         msg.setText("Query error: {}".format(err))
-        msg.setWindowTitle("Ошибка в запросе")
-        msg.setDetailedText("Query error: {}".format(err))
+        msg.setWindowTitle("Ошибка в запросе на удаление")
+        msg.setDetailedText("Query error delete: {}".format(err))
         msg.exec_()
         print(err)
 

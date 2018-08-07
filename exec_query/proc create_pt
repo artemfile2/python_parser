@@ -42,7 +42,18 @@ BEGIN
       MSE      NUMBER
     )';
 
+--  execute IMMEDIATE
+--    'CREATE UNIQUE INDEX SYSTEM.UK_PT05S50'||period||' ON SYSTEM.PT05S50'||period||' (ID_PAC, GLPU)';
+
   execute IMMEDIATE
-    'CREATE UNIQUE INDEX SYSTEM.UK_PT05S50'||period||' ON SYSTEM.PT05S50'||period||' (ID_PAC, GLPU)';
+    'CREATE INDEX SYSTEM.IDX_PT05S50'||period||'_GLPU ON SYSTEM.PT05S50'||period||' (GLPU)';
+
+  execute IMMEDIATE
+    'CREATE INDEX SYSTEM.IDX_PT05S50'||period||'_ID_PAC ON SYSTEM.PT05S50'||period||' (ID_PAC)';
+
+  execute IMMEDIATE
+    'CREATE INDEX SYSTEM.IDX_PT05S50'||period||'_NOVOR ON SYSTEM.PT05S50'||period||' (NOVOR)';
+
 
 END;
+/
