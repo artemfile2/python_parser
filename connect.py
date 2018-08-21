@@ -10,7 +10,7 @@ def con(type = 'cur'):
     try:
 
         os.environ["NLS_LANG"] = "Russian.AL32UTF8"
-        db = cx_Oracle.connect("SYSTEM", "Q1234567890", "192.168.1.209/ORCL")
+        db = cx_Oracle.connect("C##maksm", "Qq1234567890", "192.168.1.209:1522/ORCL12")
 
         dbcur = db.cursor()
         if type == 'cur':

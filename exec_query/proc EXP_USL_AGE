@@ -20,11 +20,11 @@ BEGIN
               LEFT JOIN (SELECT ID_PAC, GLPU, DR FROM PT05S50'||period||'
                              WHERE GLPU = '||''''||s_glpu||''' AND novor = '''||0||''') ps
               ON ut.id_pac = ps.id_pac AND ut.LPU = ps.glpu
-              WHERE ut.LPU = '||''''||s_glpu||''' AND
-                  ((SUBSTR(TRIM(ut.CODE_USL), -1, 1) IN ('''||1||''') AND
+              WHERE ut.LPU = '||''''||s_glpu||''' AND SUBSTR(TRIM(ut.CODE_USL), 1, 1) <> '''||5||''' AND
+                  ((SUBSTR(TRIM(ut.CODE_USL), -1, 1) = '''||1||''' AND
                   months_between(ut.DATE_IN, ps.DR) / 12 < 17.9)
                   OR
-                  (SUBSTR(TRIM(ut.CODE_USL), -1, 1) IN ('''||2||''') AND
+                  (SUBSTR(TRIM(ut.CODE_USL), -1, 1) = '''||2||''' AND
                   months_between(ut.DATE_IN, ps.DR) / 12 > 18.1)) AND
                   NOT EXISTS (SELECT s.ID_PAC, s.GLPU
                                    FROM SANKC s

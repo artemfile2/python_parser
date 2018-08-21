@@ -20,7 +20,7 @@ def create_tables(period):
     try:
         db = con('db')
         dbcur = db.cursor()
-        dbcur.execute(f"CALL SYSTEM.CREATE_TABLE('{period}')")
+        dbcur.execute(f"CALL CREATE_TABLE('{period}')")
         db.commit()
         dbcur.close()
 
@@ -34,14 +34,14 @@ def create_tables(period):
         print(f"Query error: {err}")
 
 
-def check_table(name_table):
+def check_table(period):
     """
         Функция проверки есть ли такие таблицы
     """
     try:
         db = con('db')
         dbcur = db.cursor()
-        # queryCheck = """SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) = UPPER({!r})""".format(name_table)
+        # queryCheck = """SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) = UPPER(:name_table)"""
         queryCheck = """SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) = UPPER(:name_table)"""
         dbcur.execute(queryCheck, (name_table,))
         table_check = dbcur.fetchone()
@@ -63,7 +63,8 @@ def extractZipXml(self, year, month, dir_XmlZip, tmp):
     """
     Функция работы с архивом
     """
-    if check_table('ST05S50' + year + month):
+    if check_table(year + month):
+        # check_table('ST05S50' + year + month):
         self.ui.textEdit.append('Таблицы за отчетный период ' + year + ' ' + month +
                                 ' найдены, данные с XML загружаются...')
         QApplication.instance().processEvents()

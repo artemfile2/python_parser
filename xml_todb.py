@@ -48,7 +48,7 @@ def delete_from_db(period, glpu):
         # querySNK = """DELETE FROM SANKC WHERE period = {!r} and glpu = {!r}""".format(period, glpu)
         # dbcur.execute(querySNK)
 
-        dbcur.execute("""CALL SYSTEM.DELETE_DATA({!r}, {!r})""".format(period, glpu))
+        dbcur.execute("""CALL DELETE_DATA({!r}, {!r})""".format(period, glpu))
 
         db.commit()
         dbcur.close()
@@ -341,20 +341,20 @@ def xml_2_db(path, xml):
                         except cx_Oracle.Error as err:
                             print(f'Query error при добавлении в UT: {err} lpu-{lpu_u} idserv-{idserv}')
 
-                            for vmp_oper in usl.findall('HRRGD'):
-                                vid_vme = vmp_oper.find('VID_VME').text
-                                ksgh = vmp_oper.find('KSGH').text
-                                idnomk = vmp_oper.find('IDNOMK').text
-                                name_o = vmp_oper.find('NAME_O').text
+                        for vmp_oper in usl.findall('HRRGD'):
+                            vid_vme = vmp_oper.find('VID_VME').text
+                            ksgh = vmp_oper.find('KSGH').text
+                            idnomk = vmp_oper.find('IDNOMK').text
+                            name_o = vmp_oper.find('NAME_O').text
 
-                                try:
-                                    query = dbcur.prepare('INSERT INTO NT05S50{} (glpu, mcod, idserv, hkod, ksgh, idnomk, name_o) '
-                                                          'values (:glpu, :mcod, :idserv, :hkod, :ksgh, :idnomk, :name_o)'.format(period))
+                            try:
+                                query = dbcur.prepare('INSERT INTO NT05S50{} (glpu, mcod, idserv, hkod, ksgh, idnomk, name_o) '
+                                                      'values (:glpu, :mcod, :idserv, :hkod, :ksgh, :idnomk, :name_o)'.format(period))
 
-                                    dbcur.execute(query, (lpu, lpu_1, idserv, vid_vme, ksgh, idnomk, name_o))
+                                dbcur.execute(query, (lpu, lpu_1, idserv, vid_vme, ksgh, idnomk, name_o))
 
-                                except cx_Oracle.Error as err:
-                                    print(f'Query error при добавлении в NT: {err}')
+                            except cx_Oracle.Error as err:
+                                print(f'Query error при добавлении в NT: {err}')
 
             for element_doc in element_xml_root.findall('VRACH'):
                 kod = element_doc.find('KOD').text
@@ -413,12 +413,12 @@ def xml_2_db(path, xml):
 
         try:
             if xml[0] == 'H':
-                query_RUN = "CALL SYSTEM.RUN_EXP_PROC('{}', '{}')".format(year + month, glpu_g)
+                query_RUN = "CALL RUN_EXP_PROC('{}', '{}')".format(year + month, glpu_g)
                 dbcur.execute(query_RUN)
                 sleep(2)
             dbcur.close()
         except cx_Oracle.Error as err:
-            print(f'Query error при вызове SYSTEM.RUN_EXP_PROC: {err}')
+            print(f'Query error при вызове RUN_EXP_PROC: {err}')
 
     except IOError as err:
         print(err)
