@@ -1,0 +1,28 @@
+CREATE OR REPLACE PROCEDURE RUN_EXP_PROC (period VARCHAR2,
+                                         period_date VARCHAR2,
+                                         s_glpu VARCHAR2)
+  AS
+  BEGIN
+
+    --19
+    EXP_DATEUSL(period, period_date, s_glpu);
+
+    --22
+    EXP_DOCTOR(period, period_date, s_glpu);
+
+    --4
+    EXP_USL_AGE(period, period_date, s_glpu);
+
+    --5
+    EXP_DIAG_ERR(period, period_date, s_glpu);
+
+    --2 и  3
+    EXP_DB_ERR(period, period_date, s_glpu);
+
+    --20
+    EXP_ADRES(period, period_date, s_glpu);
+
+  --TO_XLS(period, s_glpu);
+
+  END;
+/

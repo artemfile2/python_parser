@@ -1,0 +1,43 @@
+CREATE OR REPLACE PROCEDURE EXP_DOCTOR (period VARCHAR2,
+                                       period_date VARCHAR2,
+                                       s_glpu VARCHAR2)
+  IS
+    PRAGMA AUTONOMOUS_TRANSACTION;
+
+    idpacs  ut.id_pac % TYPE;
+    idsluch ut.id_sluch % TYPE;
+    idserv  ut.idserv % TYPE;
+    mcod    ut.lpu_1 % TYPE;
+
+    query3  VARCHAR2(1000);
+    TYPE EmpCurTyp IS REF CURSOR;
+    cur3    EmpCurTyp;
+
+  BEGIN
+
+    query3 := 'SELECT u.id_pac, u.id_sluch, u.idserv, u.lpu_1
+                 FROM XML_USL PARTITION (u'||period||') u
+                 WHERE u.lpu = ' || '''' || s_glpu || ''' AND
+                     TRIM(u.CODE_MD)||u.LPU_1 NOT IN (SELECT TRIM(ds.KOD)||ds.MCOD FROM XML_VRACH ds
+                                                            WHERE ds.glpu = ' || '''' || s_glpu || ''') AND
+                              u.id_pac||u.LPU NOT IN (SELECT s.ID_PAC||s.GLPU
+                                                           FROM SANKC s
+                                                           WHERE s.glpu = ' || '''' || s_glpu || ''' AND
+                                                           s.period = ' || '''' || period_date || ''')';
+
+    OPEN cur3 FOR query3;
+    LOOP
+      FETCH cur3 INTO idpacs, idsluch, idserv, mcod;
+      EXIT WHEN cur3 % NOTFOUND;
+
+      INSERT INTO SANKC (
+        glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period, comments
+      )
+      VALUES (s_glpu, mcod, '5.1.3.', 22, idpacs, idsluch, idserv, SYSDATE, period_date, 'Наличие незаполненных полей (врач)');
+
+    END LOOP;
+    CLOSE cur3;
+    COMMIT;
+
+  END;
+/

@@ -1,0 +1,48 @@
+CREATE OR REPLACE PROCEDURE EXP_DIAG_ERR (period VARCHAR2,
+                                         period_date VARCHAR2,
+                                         s_glpu VARCHAR2)
+  IS
+    PRAGMA AUTONOMOUS_TRANSACTION;
+
+    idpacs  ut.id_pac % TYPE;
+    idsluch ut.id_sluch % TYPE;
+    idserv  ut.idserv % TYPE;
+    mcod    ut.lpu_1 % TYPE;
+    cd_usl  ut.CODE_USL % TYPE;
+    summv   ut.SUMV_USL % TYPE;
+
+    query   VARCHAR2(1000);
+    TYPE EmpCurTyp IS REF CURSOR;
+    cur     EmpCurTyp;
+
+    dot     VARCHAR2(1);
+  BEGIN
+
+    dot := '.';
+
+    query := 'SELECT distinct(u.id_sluch) as id_sluch, u.id_pac, u.lpu_1, SUM(u.SUMV_USL) AS summv, MAX(u.idserv) AS idserv
+              FROM XML_USL PARTITION (u'||period||') u
+              WHERE u.lpu = ' || '''' || s_glpu || ''' AND
+                  REPLACE(TRIM(u.DS), ''' || dot || ''') NOT IN (SELECT TRIM(h.CODE) FROM HEDIAG h) AND
+                  u.id_pac||u.LPU NOT IN (SELECT s.ID_PAC||s.GLPU
+                                                 FROM SANKC s
+                                                 WHERE s.glpu = ' || '''' || s_glpu || ''' AND s.period = ' || '''' || period_date || ''')
+              GROUP BY u.id_sluch, u.id_pac, u.lpu_1
+              ORDER BY u.ID_PAC';
+
+
+    OPEN cur FOR query;
+    LOOP
+      FETCH cur INTO idsluch, idpacs, mcod, summv, idserv;
+      EXIT WHEN cur % NOTFOUND;
+
+      INSERT INTO SANKC (
+        glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period, comments, summ_shtr
+      )
+      VALUES (s_glpu, mcod, '5.1.4.', 5, idpacs, idsluch, idserv, SYSDATE, period_date, 'Отсут-ет, непр-ый код по МКБ', summv);
+
+    END LOOP;
+    CLOSE cur;
+    COMMIT;
+  END;
+/

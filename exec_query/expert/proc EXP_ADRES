@@ -1,0 +1,50 @@
+CREATE OR REPLACE PROCEDURE EXP_ADRES (period VARCHAR2,
+                                      period_date VARCHAR2,
+                                      s_glpu VARCHAR2)
+  IS
+    PRAGMA AUTONOMOUS_TRANSACTION;
+
+    idpacs  ut.id_pac % TYPE;
+    idsluch ut.id_sluch % TYPE;
+    idserv  ut.idserv % TYPE;
+    mcod    ut.lpu_1 % TYPE;
+    summv   ut.SUMV_USL % TYPE;
+    cd_usl  ut.CODE_USL % TYPE;
+
+    query   VARCHAR2(1500);
+    TYPE EmpCurTyp IS REF CURSOR;
+    cur1    EmpCurTyp;
+
+  BEGIN
+
+    query := 'SELECT distinct(us.id_sluch) as id_sluch, us.id_pac, us.lpu_1, SUM(us.SUMV_USL) AS summv, MAX(us.idserv) AS idserv
+                    FROM XML_USL PARTITION (u'||period||') us
+                    INNER JOIN (SELECT p.ID_PAC, p.glpu
+                                 FROM XML_PACIENT PARTITION (p'||period||') p
+                                 WHERE p.glpu = ' || '''' || s_glpu || ''' AND
+                                       NOT EXISTS (SELECT s.ID_PAC, s.GLPU
+                                                     FROM SANKC s
+                                                     WHERE s.glpu = ' || '''' || s_glpu || ''' AND s.period = ' || '''' || period_date || ''' AND
+                                                        p.id_pac = s.ID_PAC AND p.GLPU = s.GLPU)
+                                 GROUP BY p.ID_PAC, p.ADRES, p.GLPU
+                                 HAVING LENGTH(p.ADRES) < 9
+                                 ORDER BY p.GLPU, p.ID_PAC) cur
+                      ON us.ID_PAC = cur.ID_PAC AND us.LPU = cur.GLPU
+                   GROUP BY us.id_sluch, us.id_pac, us.lpu_1
+                   ORDER BY us.ID_PAC';
+
+    OPEN cur1 FOR query;
+    LOOP
+      FETCH cur1 INTO idsluch, idpacs, mcod, summv, idserv;
+      EXIT WHEN cur1 % NOTFOUND;
+
+      INSERT INTO SANKC (
+        glpu, mcod, povod, flag, ID_PAC, id_sluch, idserv, DATE_EXP, period, comments, summ_shtr
+      )
+      VALUES (s_glpu, mcod, '5.1.3.', 20, idpacs, idsluch, idserv, SYSDATE, period_date, 'Наличие незаполненных полей (адрес)', summv);
+
+    END LOOP;
+    CLOSE cur1;
+    COMMIT;
+  END;
+/
