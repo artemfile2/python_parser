@@ -1,21 +1,28 @@
-CREATE OR REPLACE PROCEDURE SYSTEM.DELETE_DATA (period VARCHAR2, glpu VARCHAR2)
+CREATE OR REPLACE PROCEDURE DELETE_DATA (period VARCHAR2,
+                                        period_date VARCHAR2,
+                                        glpu   VARCHAR2)
   AS
 BEGIN
 
   EXECUTE IMMEDIATE
-    'DELETE FROM SYSTEM.PT05S50'||period||' WHERE glpu = '||''''||glpu||'''';
+    'DELETE FROM XML_PACIENT PARTITION (p'||period||') WHERE glpu = ' || '''' || glpu || '''';
   EXECUTE IMMEDIATE
-    'DELETE FROM SYSTEM.TT05S50'||period||' WHERE glpu = '||''''||glpu||'''';
+    'DELETE FROM XML_PACIENT_EXT PARTITION (p'||period||') WHERE glpu = ' || '''' || glpu || '''';
+    --AND period = ' || period_date;
   EXECUTE IMMEDIATE
-    'DELETE FROM SYSTEM.DT05S50'||period||' WHERE glpu = '||''''||glpu||'''';
+    'DELETE FROM XML_SLUCH PARTITION (sl'||period||') WHERE glpu = ' || '''' || glpu || '''';
+    --AND period = ' || period_date;
   EXECUTE IMMEDIATE
-    'DELETE FROM SYSTEM.ST05S50'||period||' WHERE glpu = '||''''||glpu||'''';
+    'DELETE FROM XML_VRACH WHERE glpu = ' || '''' || glpu || ''' AND period = ' || '''' || period_date || '''';
   EXECUTE IMMEDIATE
-    'DELETE FROM SYSTEM.UT05S50'||period||' WHERE lpu = '||''''||glpu||'''';
+    'DELETE FROM XML_SCHET WHERE glpu = ' || '''' || glpu || ''' AND period = ' || '''' || period_date || '''';
   EXECUTE IMMEDIATE
-    'DELETE FROM SYSTEM.NT05S50'||period||' WHERE glpu = '||''''||glpu||'''';
+    'DELETE FROM XML_USL PARTITION (u'||period||') WHERE lpu = ' || '''' || glpu || '''';
+    --AND period = ' || period_date;
   EXECUTE IMMEDIATE
-    'DELETE FROM SANKC WHERE period = '||''''||period||''' and glpu = '||''''||glpu||'''';
+    'DELETE FROM XML_HRRGD WHERE glpu = ' || '''' || glpu || ''' AND period = ' || '''' || period_date || '''';
+  EXECUTE IMMEDIATE
+    'DELETE FROM SANKC WHERE period = ' || '''' || period || ''' AND glpu = ' || '''' || glpu || '''';
 
   COMMIT;
 

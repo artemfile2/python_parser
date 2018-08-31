@@ -20,7 +20,7 @@ def create_tables(period):
     try:
         db = con('db')
         dbcur = db.cursor()
-        dbcur.execute(f"CALL SYSTEM.CREATE_TABLE('{period}')")
+        dbcur.execute(f"CALL CREATE_TABLE('{period}')")
         db.commit()
         dbcur.close()
 
@@ -34,16 +34,16 @@ def create_tables(period):
         print(f"Query error: {err}")
 
 
-def check_table(name_table):
+def check_table(period):
     """
-        Функция проверки есть ли такие таблицы
+        Функция проверки есть ли данные в таблице
     """
     try:
         db = con('db')
         dbcur = db.cursor()
-        # queryCheck = """SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) = UPPER({!r})""".format(name_table)
-        queryCheck = """SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) = UPPER(:name_table)"""
-        dbcur.execute(queryCheck, (name_table,))
+        # queryCheck = """SELECT TABLE_NAME FROM ALL_TABLES WHERE UPPER(TABLE_NAME) = UPPER(:name_table)"""
+        queryCheck = """SELECT SCHET WHERE period = :period"""
+        dbcur.execute(queryCheck, (period,))
         table_check = dbcur.fetchone()
         if table_check is None:
             return False
@@ -63,14 +63,15 @@ def extractZipXml(self, year, month, dir_XmlZip, tmp):
     """
     Функция работы с архивом
     """
-    if check_table('ST05S50' + year + month):
-        self.ui.textEdit.append('Таблицы за отчетный период ' + year + ' ' + month +
-                                ' найдены, данные с XML загружаются...')
-        QApplication.instance().processEvents()
-    else:
-        self.ui.textEdit.append('Идет создание таблиц для отчетного месяца ' + year + ' ' + month)
-        QApplication.instance().processEvents()
-        create_tables(year + month)
+    # if check_table(month + year):
+    #     # check_table('ST05S50' + year + month):
+    #     self.ui.textEdit.append('Данные в таблице за отчетный период ' + year + ' ' + month +
+    #                             ' найдены, данные с XML загружаются...')
+    #     QApplication.instance().processEvents()
+    # else:
+    #     self.ui.textEdit.append('Идет создание секции в таблицах для отчетного месяца ' + year + ' ' + month)
+    #     QApplication.instance().processEvents()
+        # create_tables(year + month)
 
     i_infinity = 0
     while i_infinity < 10:
@@ -82,6 +83,7 @@ def extractZipXml(self, year, month, dir_XmlZip, tmp):
             name_mo = lpu[3]
 
             if exist(dir_XmlZip, year, month, glpu):
+                print(dir_XmlZip + glpu +' '+ month + year)
                 time_start = timeit.default_timer()
                 # Получаю файл ZIP из папки VipNet
                 pathfile_zip = exist(dir_XmlZip, year, month, glpu)
@@ -90,6 +92,9 @@ def extractZipXml(self, year, month, dir_XmlZip, tmp):
                 copy(pathfile_zip, tmp)
                 # Получаю новый путь из временной папки
                 tmp_zip = exist(tmp, year, month, glpu)
+                self.ui.textEdit.append(tmp_zip )
+                QApplication.instance().processEvents()
+
                 # Извлекаю из архива файлы и удаляю архив = True
                 extract(tmp_zip, tmp, True)
                 get_file_xml(tmp_zip, year, month, glpu)
@@ -98,8 +103,7 @@ def extractZipXml(self, year, month, dir_XmlZip, tmp):
                 tt = msectohmc.display_time(tm_wr2)
                 print(tmp_zip + ' ' + name_mo.strip() + ' время обработки: ' + tm_wr[0: 5])
 
-                self.ui.textEdit.append(tmp_zip + '\n' +
-                                        '  ==> ' + name_mo.strip() + '\n' +
+                self.ui.textEdit.append('  ==> ' + name_mo.strip() + '\n' +
                                         '  ==> дата/время: ' + strftime("%d.%m.%Y %H:%M:%S", localtime()) + '\n' +
                                         '  ==> время обработки: ' + tt + '\n')
                 QApplication.instance().processEvents()

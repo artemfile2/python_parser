@@ -10,7 +10,7 @@ def con(type = 'cur'):
     try:
 
         os.environ["NLS_LANG"] = "Russian.AL32UTF8"
-        db = cx_Oracle.connect("SYSTEM", "Q1234567890", "192.168.1.209/ORCL")
+        db = cx_Oracle.connect("C##maksm", "Qq1234567890", "192.168.1.209:1522/ORCL12")
 
         dbcur = db.cursor()
         if type == 'cur':
@@ -19,7 +19,7 @@ def con(type = 'cur'):
             return db
 
     except cx_Oracle.Error as error:
-        print("Ошибка подключения: '" + str(error) + "'.")
+        print("Ошибка подключения к серверу Oracle: '" + str(error) + "'.")
 
 
 def get_glpu():
