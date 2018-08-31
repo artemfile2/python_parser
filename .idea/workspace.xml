@@ -2,32 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4590f025-3e35-4c5b-8df7-3dea805c7fa2" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/exec_query/create HRRGD table" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec_query/create pacient partition" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec_query/create pacient_ext partition" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec_query/create schet table" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec_query/create sluch partition" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec_query/create usl partition" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exec_query/create vrach table" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tasks_exp.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/connect.py" beforeDir="false" afterPath="$PROJECT_DIR$/connect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc EXP_ADRES" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/proc EXP_ADRES" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc EXP_DATEUSL" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/proc EXP_DATEUSL" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc EXP_DB_ERR" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/proc EXP_DB_ERR" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc EXP_DIAG_ERR" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/proc EXP_DIAG_ERR" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc EXP_DOCTOR" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/proc EXP_DOCTOR" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc EXP_USL_AGE" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/proc EXP_USL_AGE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc RUN_EXP_PROC" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/proc RUN_EXP_PROC" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc create_dt" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/old/proc create_dt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc create_nt" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/old/proc create_nt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc create_pt" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/old/proc create_pt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc create_st" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/old/proc create_st" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc create_table" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/old/proc create_table" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc create_tt" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/old/proc create_tt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc create_ut" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/old/proc create_ut" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exec_query/proc delete_data" beforeDir="false" afterPath="$PROJECT_DIR$/exec_query/proc delete_data" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xml_todb.py" beforeDir="false" afterPath="$PROJECT_DIR$/xml_todb.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -107,6 +82,7 @@
           <entry key="create sluch partition" value="1" />
           <entry key="create usl partition" value="1" />
           <entry key="create vrach table" value="1" />
+          <entry key="gitignore" value="1" />
           <entry key="proc EXP_ADRES" value="6" />
           <entry key="proc EXP_DATEUSL" value="5" />
           <entry key="proc EXP_DB_ERR" value="5" />
@@ -126,6 +102,7 @@
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Hoi4 file" value="2" />
+          <entry key="PLAIN_TEXT" value="1" />
           <entry key="Python" value="8" />
           <entry key="SQL" value="57" />
         </counts>
@@ -176,23 +153,14 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/work_xml.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="67" column="62" selection-start-line="67" selection-start-column="62" selection-end-line="67" selection-end-column="62" />
+            <state relative-caret-position="352">
+              <caret line="82" column="28" lean-forward="true" selection-start-line="82" selection-start-column="28" selection-end-line="82" selection-end-column="28" />
               <folding>
                 <element signature="e#25#38#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/exec_query/create schet table">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
-              <caret line="11" column="22" lean-forward="true" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -305,11 +273,6 @@
               <item name="parser" type="b2602c69:ProjectViewProjectNode" />
               <item name="parser" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="parser" type="b2602c69:ProjectViewProjectNode" />
-              <item name="parser" type="462c0819:PsiDirectoryNode" />
-              <item name="exec_query" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -328,6 +291,8 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\python\parser\exec_query\expert" />
+      <recent name="D:\python\parser\exec_query\create tables" />
       <recent name="D:\python\parser\exec_query\old" />
       <recent name="D:\python\parser" />
     </key>
@@ -510,11 +475,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://D:/OpenServer/domains/atar.rmc/controllers/client.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-499" />
-      </provider>
-    </entry>
     <entry file="file://D:/OpenServer/domains/atar.rmc/controllers/base.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="66">
@@ -556,7 +516,7 @@
     <entry file="file://$USER_HOME$/Desktop/SQL1.sql" />
     <entry file="file://$PROJECT_DIR$/exec_query/function create_tt" />
     <entry file="file://$PROJECT_DIR$/exec_query/function create_table" />
-    <entry file="file://$PROJECT_DIR$/exec_query/old/proc create_table">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/old/proc create_table">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
           <caret line="9" column="4" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
@@ -564,7 +524,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/exec_query/function create_st" />
-    <entry file="file://$PROJECT_DIR$/exec_query/old/proc create_st">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/old/proc create_st">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="484">
           <caret line="22" column="4" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="4" />
@@ -573,7 +533,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/exec_query/function create_pt" />
     <entry file="file://$PROJECT_DIR$/exec_query/function create_nt" />
-    <entry file="file://$PROJECT_DIR$/exec_query/old/proc create_nt">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/old/proc create_nt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
           <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
@@ -581,7 +541,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/exec_query/function create_dt" />
-    <entry file="file://$PROJECT_DIR$/exec_query/old/proc create_tt">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/old/proc create_tt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="491">
           <caret line="76" column="31" selection-start-line="76" selection-start-column="31" selection-end-line="76" selection-end-column="31" />
@@ -637,21 +597,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/old/proc create_dt">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/old/proc create_dt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="154">
           <caret line="7" column="29" lean-forward="true" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/old/proc create_pt">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/old/proc create_pt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="275">
           <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/old/proc create_ut">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/old/proc create_ut">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
           <caret line="15" column="36" lean-forward="true" selection-start-line="15" selection-start-column="36" selection-end-line="15" selection-end-column="36" />
@@ -702,7 +662,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/proc RUN_EXP_PROC">
+    <entry file="file://$PROJECT_DIR$/exec_query/expert/proc RUN_EXP_PROC">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="28" selection-start-column="28" selection-end-column="28" />
@@ -716,42 +676,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/proc EXP_USL_AGE">
+    <entry file="file://$PROJECT_DIR$/exec_query/expert/proc EXP_USL_AGE">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="28" selection-start-column="28" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/proc EXP_DOCTOR">
+    <entry file="file://$PROJECT_DIR$/exec_query/expert/proc EXP_DOCTOR">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="459">
           <caret line="25" column="58" lean-forward="true" selection-start-line="25" selection-start-column="58" selection-end-line="25" selection-end-column="58" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/proc EXP_DIAG_ERR">
+    <entry file="file://$PROJECT_DIR$/exec_query/expert/proc EXP_DIAG_ERR">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="28" selection-start-column="28" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/proc EXP_DB_ERR">
+    <entry file="file://$PROJECT_DIR$/exec_query/expert/proc EXP_DB_ERR">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="28" selection-start-column="28" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/proc EXP_DATEUSL">
+    <entry file="file://$PROJECT_DIR$/exec_query/expert/proc EXP_DATEUSL">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="28" selection-start-column="28" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/proc EXP_ADRES">
+    <entry file="file://$PROJECT_DIR$/exec_query/expert/proc EXP_ADRES">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="28" selection-start-column="28" selection-end-column="28" />
@@ -765,62 +725,69 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/create pacient partition">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/create pacient partition">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="440">
           <caret line="74" lean-forward="true" selection-start-line="74" selection-end-line="74" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/create pacient_ext partition">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/create pacient_ext partition">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="22">
           <caret line="1" column="38" lean-forward="true" selection-start-line="1" selection-start-column="38" selection-end-line="1" selection-end-column="38" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/create sluch partition">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/create sluch partition">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2816">
           <caret line="128" column="10" selection-start-line="128" selection-start-column="10" selection-end-line="128" selection-end-column="10" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/create usl partition">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/create usl partition">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="605">
           <caret line="102" column="8" selection-start-line="102" selection-start-column="8" selection-end-line="102" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/create HRRGD table">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/create HRRGD table">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="253">
           <caret line="18" column="25" lean-forward="true" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/create vrach table">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/create vrach table">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="176">
           <caret line="8" column="23" lean-forward="true" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/work_xml.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="67" column="62" selection-start-line="67" selection-start-column="62" selection-end-line="67" selection-end-column="62" />
-          <folding>
-            <element signature="e#25#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/exec_query/create schet table">
+    <entry file="file://$PROJECT_DIR$/exec_query/create tables/create schet table">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="242">
           <caret line="11" column="22" lean-forward="true" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="6" lean-forward="true" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/work_xml.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="82" column="28" lean-forward="true" selection-start-line="82" selection-start-column="28" selection-end-line="82" selection-end-column="28" />
+          <folding>
+            <element signature="e#25#38#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
