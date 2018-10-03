@@ -10,34 +10,15 @@ from file_extract import *
 from file_copy import *
 from xml_todb import *
 from connect import *
-import msectohmc
-
-
-def create_tables(period):
-    """
-        Функция создания таблиц
-    """
-    try:
-        db = con('db')
-        dbcur = db.cursor()
-        dbcur.execute(f"CALL CREATE_TABLE('{period}')")
-        db.commit()
-        dbcur.close()
-
-    except cx_Oracle.Error as err:
-        msg = QtWidgets.QMessageBox()
-        msg.setIcon(QtWidgets.QMessageBox.Critical)
-        msg.setText(f"Query error: {err}")
-        msg.setWindowTitle("Ошибка в запросе CREATE_TABLE")
-        msg.setDetailedText(f"Query error CREATE_TABLE: {err}")
-        msg.exec_()
-        print(f"Query error: {err}")
+from msectohmc import display_time
 
 
 def check_table(period):
     """
         Функция проверки есть ли данные в таблице
     """
+
+    # //TODO: сделать проверку секции и при необходимости создавать новые
     try:
         db = con('db')
         dbcur = db.cursor()
@@ -63,15 +44,10 @@ def extractZipXml(self, year, month, dir_XmlZip, tmp):
     """
     Функция работы с архивом
     """
-    # if check_table(month + year):
-    #     # check_table('ST05S50' + year + month):
-    #     self.ui.textEdit.append('Данные в таблице за отчетный период ' + year + ' ' + month +
-    #                             ' найдены, данные с XML загружаются...')
-    #     QApplication.instance().processEvents()
-    # else:
-    #     self.ui.textEdit.append('Идет создание секции в таблицах для отчетного месяца ' + year + ' ' + month)
-    #     QApplication.instance().processEvents()
-        # create_tables(year + month)
+    #check_table('ST05S50' + year + month):
+
+    self.ui.textEdit.append('Данные за отчетный период ' + year + ' ' + month + ' с XML загружаются...')
+    QApplication.instance().processEvents()
 
     i_infinity = 0
     while i_infinity < 10:
@@ -100,7 +76,7 @@ def extractZipXml(self, year, month, dir_XmlZip, tmp):
                 get_file_xml(tmp_zip, year, month, glpu)
                 tm_wr = str(timeit.default_timer() - time_start)
                 tm_wr2 = timeit.default_timer() - time_start
-                tt = msectohmc.display_time(tm_wr2)
+                tt = display_time(tm_wr2)
                 print(tmp_zip + ' ' + name_mo.strip() + ' время обработки: ' + tm_wr[0: 5])
 
                 self.ui.textEdit.append('  ==> ' + name_mo.strip() + '\n' +
