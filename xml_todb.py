@@ -9,14 +9,16 @@ from myconverter import convert_none_type
 
 
 def delete_from_db(month, year, glpu):
+    """
+    Удаление данных в таблицах по коду МО и периоду
+    """
     try:
         db = con('db')
         dbcur = db.cursor()
-        dbcur.execute("""CALL DELETE_DATA(:period, :date_per, :glpu)""", (
-            month + year, '01.' + month + '.' + year, glpu))
+        dbcur.execute("""CALL DELETE_DATA(:period, :date_per, :glpu)""",
+                        (month + year, '01.' + month + '.' + year, glpu))
         db.commit()
         dbcur.close()
-        # print('end the delete')
     except cx_Oracle.Error as err:
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Critical)
@@ -51,7 +53,8 @@ def xml_2_db(path, xml):
 
                 query = dbcur.prepare('INSERT INTO XML_PACIENT PARTITION(p{})'
                                       '(id_pac, glpu, fam, im, ot, w, dr, dost, fam_p, im_p, ot_p, dr_p, dost_p, w_p,'
-                                      'mr, doctype, docser, docnum, snils, adres, ident_sp, polis, novor, inv, mse, period) '
+                                      'mr, doctype, docser, docnum, snils, adres, ident_sp, polis, novor, inv, mse,'
+                                      'period) '
                                       'VALUES (:id_pac, :glpu_l, :fam, :im, :ot, :w, :dr, :dost, :fam_p, :im_p, :ot_p,'
                                       ':dr_p, :dost_p, :w_p, :mr, :doctype, :docser, :docnum, :snils, :adres, :ident_sp,'
                                       ':id_pac, :novor, :inv, :mse, :period)'.format(month + year))
@@ -82,11 +85,8 @@ def xml_2_db(path, xml):
                     # comentp = elem_pers.find('COMENTP').text
                     vpolis = elem_pers.find('VPOLIS').text
                     novor = convert_none_type(elem_pers.find('NOVOR'))
-                    inv = convert_none_type(elem_pers.find('inv'))
-                    mse = convert_none_type(elem_pers.find('mse'))
-
-                    # if dr == '' or w == '':
-                    #     print('Пустые строки в сегменте PERS')
+                    inv = convert_none_type(elem_pers.find('INV'))
+                    mse = convert_none_type(elem_pers.find('MSE'))
 
                     if w == '':
                         w = 0
@@ -112,12 +112,9 @@ def xml_2_db(path, xml):
                 print(f'Query error при добавлении в XML_PACIENT: {err}')
 
         if xml[0] == 'H':
-            # print('HHHHHH')
             year = '20'+xml[8:10]
             month = xml[10:12]
             glpu = xml[12:18]
-            # list_pac_ext = []
-            # lists_all_pac = []
 
             element_xml_root = tree.getroot()
             for element in element_xml_root.findall('ZAP'):
@@ -155,8 +152,8 @@ def xml_2_db(path, xml):
                                                  '(id_pac, vpolis, spolis, npolis, smo, smo_ogrn, smo_ok, smo_nam,'
                                                  ' novor, vnov_d, glpu, period)'
                                                  ' VALUES '
-                                                 '(:idpac, :vpolis, :spolis, :npolis, :smo, :smo_ogrn, :smo_ok, :smo_nam,'
-                                                 ' :novor, :vnov_d, :glpu, :period)'.format(month + year))
+                                                 '(:idpac, :vpolis, :spolis, :npolis, :smo, :smo_ogrn, :smo_ok, '
+                                                 ' :smo_nam, :novor, :vnov_d, :glpu, :period)'.format(month + year))
 
                         dbcur.execute(queryPT2, (idpac, vpolis, spolis, npolis, smo, smoogrn, smook,
                                                 smonam, novor, vnov_d, glpu,
@@ -242,11 +239,11 @@ def xml_2_db(path, xml):
 
                     try:
                         # / *+ APPEND_VALUES * /
-                        queryTT = dbcur.prepare('INSERT INTO XML_SLUCH PARTITION(sl{}) (glpu, mcod, idcase, usl_ok, vidpom, for_pom, '
-                                    'disp, vid_hmp, metod_hmp, npr_mo, extr, podr, profil, det, nhistory, date_1,'
-                                    'date_2, ds0, ds1, ds2, ds3, vnov_m, code_mes1, code_mes2, rslt, rslt_d, '
-                                    'ishod, prvs_s, vers_spec, iddokt, os_sluch, idsp, ed_col, tarif, sumv, '
-                                    'oplata, sump, tal_d, tal_p, vbr, p_otk, nrisoms, ds1_pr, ds4, nazn, naz_sp, '
+                        queryTT = dbcur.prepare('INSERT INTO XML_SLUCH PARTITION(sl{}) (glpu, mcod, idcase, usl_ok, '
+                                    'vidpom, for_pom, disp, vid_hmp, metod_hmp, npr_mo, extr, podr, profil, det, '
+                                    'nhistory, date_1, date_2, ds0, ds1, ds2, ds3, vnov_m, code_mes1, code_mes2, '
+                                    'rslt, rslt_d, ishod, prvs_s, vers_spec, iddokt, os_sluch, idsp, ed_col, tarif, '
+                                    'sumv, oplata, sump, tal_d, tal_p, vbr, p_otk, nrisoms, ds1_pr, ds4, nazn, naz_sp, '
                                     'naz_v, naz_pmp, naz_pk, pr_d_n, comentsl, pr_nov, novor, order_, t_order, '
                                     'kem_prov, smo, id_sluch_tt, prizn_prov, id_pac, stat, npr_date, tal_num, period) '
                                     'VALUES (:lpu, :lpu_1, :idcase, :usl_ok, :vidpom, :for_pom, :disp, '
@@ -256,7 +253,10 @@ def xml_2_db(path, xml):
                                     ':ed_col, :tarif, :sumv, :oplata, :sump, :dtd, :dtp, :vbr, :p_otk, '
                                     ':nrisoms, :ds1_pr, :ds4, :nazn, :naz_sp, :naz_v, :naz_pmp, :naz_pk, '
                                     ':pr_d_n, :comentsl, :pr_nov, :novor_sl, :orders, :t_order, :kem_prov, '
-                                    ':smo_sl, :ids, :prizn_prov, :idpac, :stat, :nprdat, :talnum, :period)'.format(month + year))
+                                    ':smo_sl, :ids, :prizn_prov, :idpac, :stat, :nprdat, :talnum, :period)'.format(
+                                                                                                          month + year
+                                                                                                          )
+                                    )
 
                         dt1 = datetime.strptime(date_1, "%Y-%m-%d")
                         dt2 = datetime.strptime(date_2, "%Y-%m-%d")
@@ -282,7 +282,8 @@ def xml_2_db(path, xml):
                                     vers_spec, iddokt, os_sluch, idsp, ed_col, tarif, sumv, oplata, sump,
                                     dtd, dtp, vbr, p_otk, nrisoms, ds1_pr, ds4, nazn, naz_sp, naz_v, naz_pmp,
                                     naz_pk, pr_d_n, comentsl, pr_nov, novor_sl, orders, t_order, kem_prov, smo_sl,
-                                    idcase, 0, idpac, stat, nprdat, talnum, datetime.strptime('01.'+month+'.'+year, "%d.%m.%Y")))
+                                    idcase, 0, idpac, stat, nprdat, talnum,
+                                    datetime.strptime('01.'+month+'.'+year, "%d.%m.%Y")))
                     except cx_Oracle.Error as err:
                         print(f'Query error при добавлении в XML_SLUCH: {err} lpu-{lpu} idcase-{idcase}')
 
@@ -322,12 +323,12 @@ def xml_2_db(path, xml):
                         idsh = convert_none_type(usl.find('idsh'))
 
                         try:
-                            # / *+ APPEND_VALUES * /
-                            query_u = dbcur.prepare('INSERT INTO XML_USL PARTITION(u{}) (lpu, lpu_1, ID_SLUCH, idserv, podr, profil,'
-                                                  'det, date_in, date_out, ds, code_usl, ed_col, koefk, pouh, zak, kol_usl, '
-                                                  'tarif, sumv_usl, sumv_oms, prvs_u, code_md, comentu, dir2, gr_zdorov, '
-                                                  'student, spolis, npolis, stand, p_per, npl, idsh, id_pac, stat, period) '
-                                                  'VALUES (:lpu_u, :lpu_1u, :idcase, :idserv, :podr, :profil_u, :det, '
+                            query_u = dbcur.prepare('INSERT INTO XML_USL PARTITION(u{}) (lpu, lpu_1, ID_SLUCH, idserv, '
+                                                  'podr, profil, det, date_in, date_out, ds, code_usl, ed_col, koefk, '
+                                                  'pouh, zak, kol_usl, tarif, sumv_usl, sumv_oms, prvs_u, code_md,'
+                                                  'comentu, dir2, gr_zdorov, student, spolis, npolis, stand, p_per, '
+                                                  'npl, idsh, id_pac, stat, period) '
+                                                  ' VALUES (:lpu_u, :lpu_1u, :idcase, :idserv, :podr, :profil_u, :det, '
                                                   ':date_in, :date_out, :ds, :code_usl, :ed_col_u, :koef_k, :pouh, :zak, '
                                                   ':kol_usl, :tarif, :sumv_usl, :sumv_usl, :prvs, :code_md, :comentu, '
                                                   ':dir2, :gr_zdorov, :student, :spolis_u, :npolis_u, :stand, :p_per, '
@@ -345,6 +346,91 @@ def xml_2_db(path, xml):
                         except cx_Oracle.Error as err:
                             print(f'Query error при добавлении в XML_USL: {err} lpu-{lpu_u} idserv-{idserv}')
 
+
+                        for napr in usl.findall('NAPR'):
+                            napr_date = napr.find('NAPR_DATE').text
+                            napr_v = napr.find('NAPR_V').text
+                            met_issl = napr.find('MET_ISSL').text
+                            napr_usl = napr.find('NAPR_USL').text
+
+                            try:
+                                query_napr = dbcur.prepare('INSERT INTO XML_NAPR (idserv, glpu, period, napr_date, '
+                                                           'napr_v, met_issl, napr_usl) '
+                                                           'VALUES (:idserv, :glpu, :period, :napr_date, :napr_v, '
+                                                           ':met_issl, :napr_usl)')
+
+                                dbcur.execute(query_napr, (idserv, lpu_u, '01.' + month + '.' + year), napr_date,
+                                              napr_v, met_issl, napr_usl)
+
+                            except cx_Oracle.Error as err:
+                                print(f'Query error при добавлении в XML_NAPR: {err}')
+
+                        for onk_usl in usl.findall('ONK_USL'):
+                            id_onk = onk_usl.find('ID').text
+                            ds1_t = onk_usl.find('DS1_T').text
+                            stad = onk_usl.find('STAD').text
+                            onk_t = onk_usl.find('ONK_T').text
+                            onk_n = onk_usl.find('ONK_N').text
+                            onk_m = onk_usl.find('ONK_M').text
+                            mtstz = onk_usl.find('MTSTZ').text
+                            sod = float(onk_usl.find('SOD').text)
+                            pr_cons = onk_usl.find('PR_CONS').text
+                            usl_tip = onk_usl.find('USL_TIP').text
+                            hir_tip = onk_usl.find('HIR_TIP').text
+                            lek_tip_l = onk_usl.find('LEK_TIP_L').text
+                            lek_tip_v = onk_usl.find('LEK_TIP_V').text
+                            luch_tip = onk_usl.find('LUCH_TIP').text
+                            dt_cons = onk_usl.find('DT_CONS').text
+
+                            try:
+                                query_onk = dbcur.prepare('INSERT INTO XML_ONK (idserv, id, glpu, period, ds1_t, '
+                                                           'stad, onk_t, onk_n, onk_m, mtstz, sod, pr_cons, usl_tip,'
+                                                           'hir_tip, lek_tip_l, lek_tip_v, luch_tip, dt_cons) '
+                                                           'VALUES (:idserv, :id, :glpu, :period, :ds1_t, :stad, '
+                                                           ':onk_t, :onk_n, :onk_m, :mtstz, :sod, :pr_cons, :usl_tip,'
+                                                           ':hir_tip, :lek_tip_l, :lek_tip_v, :luch_tip, :dt_cons)')
+
+                                dtonk = datetime.strptime(dt_cons, "%Y-%m-%dT%H:%M:%S").date()
+                                dbcur.execute(query_onk, (idserv, id_onk, lpu_u, '01.' + month + '.' + year,
+                                                          ds1_t, stad, onk_t, onk_n, onk_m, mtstz, sod, pr_cons,
+                                                          usl_tip, hir_tip, lek_tip_l, lek_tip_v, luch_tip, dtonk))
+
+                            except cx_Oracle.Error as err:
+                                print(f'Query error при добавлении в XML_ONK: {err}')
+
+                            for diag in onk_usl.findall('B_DIAG'):
+                                diag_tip = diag.find('DIAG_TIP').text
+                                diag_code = diag.find('DIAG_CODE').text
+                                diag_rslt = diag.find('DIAG_RSLT').text
+
+                                try:
+                                    query_diag = dbcur.prepare('INSERT INTO XML_DIAG (idserv, id, glpu, period,'
+                                                               'diag_tip, diag_code, diag_rslt) '
+                                                               'VALUES (:idserv, :id, :glpu, :period, :diag_tip, '
+                                                               ':diag_code, :diag_rslt)')
+
+                                    dbcur.execute(query_diag, (idserv, id_onk, lpu_u, '01.' + month + '.' + year,
+                                                               diag_tip, diag_code, diag_rslt))
+
+                                except cx_Oracle.Error as err:
+                                    print(f'Query error при добавлении в XML_DIAG: {err}')
+
+                            for bprot in onk_usl.findall('B_PROT'):
+                                prot = bprot.find('PROT').text
+                                d_prot = bprot.find('D_PROT').text
+
+                                try:
+                                    query_prot = dbcur.prepare('INSERT INTO XML_PROT (idserv, id, glpu, period,'
+                                                               'prot, d_prot) '
+                                                               'VALUES (:idserv, :id, :glpu, :period, '
+                                                               ':prot, :d_prot)')
+
+                                    dbcur.execute(query_prot, (idserv, id_onk, lpu_u, '01.' + month + '.' + year,
+                                                               prot, d_prot))
+
+                                except cx_Oracle.Error as err:
+                                    print(f'Query error при добавлении в XML_PROT: {err}')
+
                         for vmp_oper in usl.findall('HRRGD'):
                             vid_vme = vmp_oper.find('VID_VME').text
                             ksgh = vmp_oper.find('KSGH').text
@@ -352,8 +438,10 @@ def xml_2_db(path, xml):
                             name_o = vmp_oper.find('NAME_O').text
 
                             try:
-                                query_oper = dbcur.prepare('INSERT INTO XML_HRRGD (glpu, mcod, idserv, hkod, ksgh, idnomk, name_o, period) '
-                                                      'values (:glpu, :mcod, :idserv, :hkod, :ksgh, :idnomk, :name_o, :period)')
+                                query_oper = dbcur.prepare('INSERT INTO XML_HRRGD (glpu, mcod, idserv, hkod, ksgh,'
+                                                           'idnomk, name_o, period) '
+                                                           'VALUES (:glpu, :mcod, :idserv, :hkod, :ksgh, :idnomk, '
+                                                           ':name_o, :period)')
 
                                 dbcur.execute(query_oper, (lpu, lpu_1, idserv, vid_vme, ksgh, idnomk, name_o,
                                                       '01.' + month + '.' + year))
@@ -420,30 +508,30 @@ def xml_2_db(path, xml):
 
         try:
             if xml[0] == 'H':
-                # print('run exp')
-                query_RUN = "CALL RUN_EXP_PROC(:period, :period_date, :glpu)"
-                dbcur.execute(query_RUN, (month + year, '01.' + month +'.'+ year, glpu_g))
-                # print('end exp')
+                # query_RUN = "CALL RUN_EXP_PROC(:period, :period_date, :glpu)"
+                # dbcur.execute(query_RUN, (month + year, '01.' + month +'.'+ year, glpu_g))
+
+
                 # print('run exp 1')
                 # query_RUN1 = "CALL EXP_ADRES(:period, :period_date, :glpu)"
                 # dbcur.execute(query_RUN1, (month + year, '01.' + month +'.'+ year, glpu_g))
-                # print('run exp 2')
-                # query_RUN2 = "CALL EXP_DATEUSL(:period, :period_date, :glpu)"
-                # dbcur.execute(query_RUN2, (month + year, '01.' + month +'.'+ year, glpu_g))
-                # print('run exp 3')
-                # query_RUN3 = "CALL EXP_DOCTOR(:period, :period_date, :glpu)"
-                # dbcur.execute(query_RUN3, (month + year, '01.' + month +'.'+ year, glpu_g))
+                print('run exp 2')
+                query_RUN2 = "CALL EXP_DATEUSL(:period, :period_date, :glpu)"
+                dbcur.execute(query_RUN2, (month + year, '01.' + month +'.'+ year, glpu_g))
+                print('run exp 3')
+                query_RUN3 = "CALL EXP_DOCTOR(:period, :period_date, :glpu)"
+                dbcur.execute(query_RUN3, (month + year, '01.' + month +'.'+ year, glpu_g))
+                print('run exp 5')
+                query_RUN5 = "CALL EXP_DIAG_ERR(:period, :period_date, :glpu)"
+                dbcur.execute(query_RUN5, (month + year, '01.' + month +'.'+ year, glpu_g))
                 # print('run exp 4')
                 # query_RUN4 = "CALL EXP_USL_AGE(:period, :period_date, :glpu)"
-                # dbcur.execute(query_RUN4, (month + year, '01.' + month +'.'+ year, glpu_g))
-                # print('run exp 5')
-                # query_RUN5 = "CALL EXP_DIAG_ERR(:period, :period_date, :glpu)"
-                # dbcur.execute(query_RUN5, (month + year, '01.' + month +'.'+ year, glpu_g))
+                # dbcur.execute(query_RUN4, (month + year, '01.' + month + '.' + year, glpu_g))
                 # print('run exp 6')
                 # query_RUN6 = "CALL EXP_DB_ERR(:period, :period_date, :glpu)"
                 # dbcur.execute(query_RUN6, (month+year, '01.' + month +'.'+ year, glpu_g))
-                # print('end exp')
-                # sleep(2)
+                print('end exp')
+
                 dbcur.close()
         except cx_Oracle.Error as err:
             print(f'Query error при вызове RUN_EXP_PROC: {err}')
@@ -455,6 +543,7 @@ def xml_2_db(path, xml):
 def get_file_xml(xml_file, year, month, glpu):
     """
     Функция получения наименования XML файлов из zip архива
+    если данные по коду есть в базе, удаляются все данные по данному периоду и коду МО
     """
     try:
         pathxml = os.path.dirname(xml_file)
