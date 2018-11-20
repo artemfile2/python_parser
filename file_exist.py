@@ -3,11 +3,12 @@
 
 import os
 
+
 # Год, месяц и наименование ЛПУ для файла в архиве
 # year, month, glpu
 def exist(dir, year, month, glpu):
-
     #Наименование файла zip c xml
+
     file_zip = 'HT05S50_' + year[2:4] + month + glpu
 
     if os.path.exists(dir + file_zip + 'P.ZIP'):
