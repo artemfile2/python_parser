@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 intervals = (
-    # ('час', 3600),    # 60 * 60
-    ('мин', 60),
-    ('сек', 1),
-    )
+             ('мин', 60),
+             ('сек', 1),
+            )
 
 def display_time(seconds):
     x = str(seconds).find('.')

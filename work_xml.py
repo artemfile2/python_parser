@@ -11,6 +11,7 @@ from file_copy import *
 from xml_todb import *
 from connect import *
 from msectohmc import display_time
+# from threading import Thread
 
 
 def check_table(period):
@@ -59,21 +60,27 @@ def extractZipXml(self, year, month, dir_XmlZip, tmp):
             name_mo = lpu[3]
 
             if exist(dir_XmlZip, year, month, glpu):
-                print(dir_XmlZip + glpu +' '+ month + year)
+                print(dir_XmlZip + glpu + ' ' + month + year)
                 time_start = timeit.default_timer()
                 # Получаю файл ZIP из папки VipNet
                 pathfile_zip = exist(dir_XmlZip, year, month, glpu)
-                sleep(1)
+                # sleep(1)
                 # Копирую архив во временную папку
-                copy(pathfile_zip, tmp)
+                mcopy(pathfile_zip, tmp)
                 # Получаю новый путь из временной папки
                 tmp_zip = exist(tmp, year, month, glpu)
-                self.ui.textEdit.append(tmp_zip )
+                self.ui.textEdit.append(tmp_zip)
                 QApplication.instance().processEvents()
 
                 # Извлекаю из архива файлы и удаляю архив = True
                 extract(tmp_zip, tmp, True)
                 get_file_xml(tmp_zip, year, month, glpu)
+
+                # thread = threading.Thread(target=get_file_xml, args=(tmp_zip, year, month, glpu,))
+                # thread2 = Thread(target=get_file_xml, args=(tmp_zip, year, month, glpu,))
+                # thread2.start()
+                # thread2.join()
+
                 tm_wr = str(timeit.default_timer() - time_start)
                 tm_wr2 = timeit.default_timer() - time_start
                 tt = display_time(tm_wr2)

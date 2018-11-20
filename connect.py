@@ -20,6 +20,7 @@ def con(type = 'cur'):
 
     except cx_Oracle.Error as error:
         print("Ошибка подключения к серверу Oracle: '" + str(error) + "'.")
+        return ['error', "Ошибка подключения к серверу Oracle: {}.".format(error)]
 
 
 def get_glpu():

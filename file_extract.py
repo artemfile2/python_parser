@@ -4,8 +4,10 @@
 import zipfile
 import os
 
-def extract(zippedFile, toFolder, delete = False):
-    if os.path.isfile(zippedFile): #and os.access(zippedFile, os.R_OK)
+
+def extract(zippedFile, toFolder, delete=False):
+    if os.path.isfile(zippedFile):
+        #and os.access(zippedFile, os.R_OK)
         with zipfile.ZipFile(zippedFile, 'r') as zfile:
             try:
                 zfile.extractall(path=toFolder)
